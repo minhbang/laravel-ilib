@@ -1,0 +1,35 @@
+{
+    "name": "minhbang/laravel-ilib",
+    "description": "Laravel ILib Package",
+    "keywords": [
+        "minhbang",
+        "laravel-ilib"
+    ],
+    "homepage": "https://github.com/minhbang/laravel-ilib",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Minh Bang",
+            "email": "contact@minhbang.com",
+            "homepage": "http://minhbang.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.9",
+        "illuminate/support": "~5.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Minhbang\\ILib\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Minhbang\\ILib\\Test\\": "tests/"
+        }
+    }
+}
