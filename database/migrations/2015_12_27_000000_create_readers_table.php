@@ -18,7 +18,7 @@ class CreateReadersTable extends Migration
             $table->string('code', 20);
             $table->integer('security_id')->unsigned();
             $table->integer('user_id')->unsigned();
-            $table->timestamps();
+            $table->nullableTimestamps();
         });
     }
 

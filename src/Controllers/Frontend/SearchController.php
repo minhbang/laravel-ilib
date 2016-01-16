@@ -94,7 +94,7 @@ class SearchController extends Controller
 
         return view(
             'ilib::frontend.search.index',
-            $enums + compact('ebooks', 'ebook_widget', 'total', 'categories', 'params', 'column_key', 'advanced')
+            $enums + compact('q', 'ebooks', 'ebook_widget', 'total', 'categories', 'params', 'column_key', 'advanced')
         );
     }
 

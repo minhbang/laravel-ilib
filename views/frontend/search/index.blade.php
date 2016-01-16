@@ -10,7 +10,7 @@
         <div class="form search">
             {!! Form::model($params, ['route' => 'ilib.search', 'method' => 'get']) !!}
             <div class="input-group">
-                {!! Form::text('q', null, ['id' => 'form_search', 'class' => 'input-lg form-control', 'placeholder' => trans('common.keyword').'...']) !!}
+                {!! Form::text('q', $q, ['id' => 'form_search', 'class' => 'query input-lg form-control', 'placeholder' => trans('common.keyword').'...']) !!}
                 <span class="input-group-btn">
                     <button class="btn btn-success btn-lg" type="submit">
                         <i class="fa fa-search"></i> {{trans('common.search')}}
@@ -66,22 +66,7 @@
             {!! Form::close() !!}
         </div>
         @if($total)
-            <div class="main-meta">
-                <div class="form form-inline">
-                    <div class="buttons">
-                        {!! $search_options->link('type', 'th', 'th', trans('ilib::common.display_th')) !!}
-                        {!! $search_options->link('type', 'list', 'list', trans('ilib::common.display_list')) !!}
-                    </div>
-                    <div class="pull-right">
-                        <div class="form-group">
-                            {!! $search_options->select('sort', trans('ilib::common.sort'), trans('ilib::common.sort_hint')) !!}
-                        </div>
-                        <div class="form-group">
-                            {!! $search_options->select('page_size', trans('ilib::common.page_size'), trans('ilib::common.page_size_hint')) !!}
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @include('ilib::frontend._display_options', ['options' => $search_options])
         @endif
         <div class="ebooks">
             @if($total)

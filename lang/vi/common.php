@@ -21,4 +21,5 @@ return [
     'search'         => 'Tìm kiếm Tài liệu số',
     'search_result'  => 'Kết quả Tìm kiếm',
     'search_empty'   => 'Không tìm thấy Tài liệu số theo yêu cầu...',
+    'latest'         => 'Tài liệu số mới cập nhật',
 ];

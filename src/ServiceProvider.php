@@ -25,10 +25,10 @@ class ServiceProvider extends BaseServiceProvider
                 __DIR__ . '/../config/ilib.php'                   => config_path('ilib.php'),
                 __DIR__ . '/../database/migrations/' .
                 '2015_12_27_000000_create_readers_table.php'      =>
-                    database_path('migrations/' . '2015_12_27_000000_create_readers_table.php'),
+                    database_path('migrations/2015_12_27_000000_create_readers_table.php'),
                 __DIR__ . '/../database/migrations/' .
                 '2015_12_27_100000_create_ebook_reader_table.php' =>
-                    database_path('migrations/' . '2015_12_27_100000_create_ebook_reader_table.php'),
+                    database_path('migrations/2015_12_27_100000_create_ebook_reader_table.php'),
             ]
         );
 

@@ -18,6 +18,7 @@ class EbookWidget
     public function itemTh(Ebook $ebook)
     {
         $url = route('ilib.ebook.show', ['ebook' => $ebook->id]);
+
         return <<<"ITEM"
 <div class="col-md-4 col-sm-4 col-xs-6">
     <a href="$url" class="ebook-th-item">
@@ -27,6 +28,7 @@ class EbookWidget
                 <div class="inner">
                     {$ebook->writer}<br>
                     {$ebook->present()->fileicon} {$ebook->present()->filesize}
+                    <i class="fa fa-eye"></i> {$ebook->hit}
                 </div>
             </div>
             <div class="security">{$ebook->present()->securityFormated('primary')}</div>
@@ -114,5 +116,24 @@ ITEM;
     public function emptyItems()
     {
         return '<div class="alert alert-danger">' . trans('ilib::common.empty_items') . '</div>';
+    }
+
+    /**
+     * Render danh sách Ebooks theo định dạng bxSlider
+     *
+     * @see http://bxslider.com/
+     *
+     * @param \Minhbang\Ebook\Ebook[]|\Illuminate\Database\Eloquent\Collection $ebooks
+     *
+     * @return string
+     */
+    public function bxSlider($ebooks)
+    {
+        $html = '';
+        foreach ($ebooks as $ebook) {
+            $html .= '<div class="ebook-slider-item"></div>';
+        }
+
+        return $html ? "<div class=\"bxslider ebook-slider\">$html</div>" : '';
     }
 }

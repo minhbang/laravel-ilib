@@ -17,7 +17,7 @@ class CreateEbookReaderTable extends Migration
             $table->integer('ebook_id')->unsigned();
             $table->integer('reader_id')->unsigned();
             $table->dateTime('expires_at');
-            $table->timestamps();
+            $table->nullableTimestamps();
         });
     }
 

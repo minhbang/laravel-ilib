@@ -18,6 +18,10 @@ class EbookController extends Controller
      */
     public function show(Ebook $ebook)
     {
+        $ebook->timestamps = false;
+        $ebook->hit = $ebook->hit + 1;
+        $ebook->save();
+
         $ebook = $ebook->loadInfo();
         $cat_show = route('ilib.category.show', ['category' => $ebook->category->id]);
         $this->buildBreadcrumbs([

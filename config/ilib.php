@@ -18,5 +18,10 @@ return [
             'page_size' => 6,
             'type'      => 'th',
         ],
+        'home' => [
+            'sort'      => 'name.asc',
+            'page_size' => 6,
+            'type'      => 'th',
+        ],
     ],
 ];
