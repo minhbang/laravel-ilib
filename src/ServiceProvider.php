@@ -2,7 +2,7 @@
 namespace Minhbang\ILib;
 
 use Illuminate\Routing\Router;
-use Illuminate\Support\ServiceProvider as BaseServiceProvider;
+use Minhbang\Kit\Extensions\BaseServiceProvider;
 
 /**
  * Class ServiceProvider
@@ -20,21 +20,24 @@ class ServiceProvider extends BaseServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../views', 'ilib');
         $this->publishes(
             [
-                __DIR__ . '/../views'                             => base_path('resources/views/vendor/ilib'),
-                __DIR__ . '/../lang'                              => base_path('resources/lang/vendor/ilib'),
-                __DIR__ . '/../config/ilib.php'                   => config_path('ilib.php'),
-                __DIR__ . '/../database/migrations/' .
-                '2015_12_27_000000_create_readers_table.php'      =>
-                    database_path('migrations/2015_12_27_000000_create_readers_table.php'),
-                __DIR__ . '/../database/migrations/' .
-                '2015_12_27_100000_create_ebook_reader_table.php' =>
-                    database_path('migrations/2015_12_27_100000_create_ebook_reader_table.php'),
+                __DIR__ . '/../views'           => base_path('resources/views/vendor/ilib'),
+                __DIR__ . '/../lang'            => base_path('resources/lang/vendor/ilib'),
+                __DIR__ . '/../config/ilib.php' => config_path('ilib.php'),
             ]
         );
+        $this->publishes(
+            [
+                __DIR__ . '/../database/migrations/2015_12_27_000000_create_readers_table.php'      =>
+                    database_path('migrations/2015_12_27_000000_create_readers_table.php'),
+                __DIR__ . '/../database/migrations/2015_12_27_100000_create_ebook_reader_table.php' =>
+                    database_path('migrations/2015_12_27_100000_create_ebook_reader_table.php'),
+                __DIR__ . '/../database/migrations/2015_12_27_200000_create_read_ebook_table.php' =>
+                    database_path('migrations/2015_12_27_200000_create_read_ebook_table.php'),
+            ],
+            'db'
+        );
 
-        if (config('ilib.add_route') && !$this->app->routesAreCached()) {
-            require __DIR__ . '/routes.php';
-        }
+        $this->mapWebRoutes($router, __DIR__ . '/routes.php', config('ilib.add_route'));
 
         // pattern filters
         $router->pattern('reader', '[0-9]+');
