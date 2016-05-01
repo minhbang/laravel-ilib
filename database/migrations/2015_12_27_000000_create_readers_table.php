@@ -14,11 +14,11 @@ class CreateReadersTable extends Migration
     public function up()
     {
         Schema::create('readers', function (Blueprint $table) {
-            $table->increments('id');
+            $table->integer('user_id')->unsigned()->primary();
             $table->string('code', 20);
             $table->integer('security_id')->unsigned();
-            $table->integer('user_id')->unsigned();
             $table->nullableTimestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

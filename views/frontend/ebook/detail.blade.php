@@ -8,7 +8,7 @@
             <div class="cover">
                 <div class="ebook-cover ebook-cover-lg">
                     {!! $ebook->present()->featured_image('img-responsive', false, false, '') !!}
-                    <div class="security">{!! $ebook->present()->securityFormated('primary') !!}</div>
+                    <div class="security">{!! $ebook->present()->securityFormated('success') !!}</div>
                 </div>
             </div>
             <div class="details">
@@ -29,7 +29,7 @@
                     <dd>{{$ebook->pages}}</dd>
                 </dl>
                 <div class="buttons">
-                    <a href="{{route('ilib.ebook.full', ['ebook' => $ebook->id, 'slug' => $ebook->slug])}}" class="btn btn-success">{{trans('common.show')}}</a>
+                    <a href="{{route('ilib.ebook.view', ['ebook' => $ebook->id, 'slug' => $ebook->slug])}}" class="btn btn-success">{{trans('ilib::common.view')}}</a>
                     <div class="meta">
                         <small>{!! $ebook->present()->fileicon !!} {{$ebook->present()->filesize}}</small>
                     </div>

@@ -17,7 +17,7 @@ class EbookWidget
      */
     public function itemTh(Ebook $ebook)
     {
-        $url = route('ilib.ebook.show', ['ebook' => $ebook->id]);
+        $url = route('ilib.ebook.detail', ['ebook' => $ebook->id]);
 
         return <<<"ITEM"
 <div class="col-md-4 col-sm-4 col-xs-6">
@@ -31,7 +31,7 @@ class EbookWidget
                     <i class="fa fa-eye"></i> {$ebook->hit}
                 </div>
             </div>
-            <div class="security">{$ebook->present()->securityFormated('primary')}</div>
+            <div class="security">{$ebook->present()->securityFormated('success')}</div>
         </div>
         <div class="title">{$ebook->title}</div>
     </a>
@@ -50,7 +50,7 @@ ITEM;
         $ds .= '<dt>' . trans("ebook::common.language_id") . '</dt><dd>' . $ebook->language . '</dd>';
         $ds .= '<dt>' . trans("ebook::common.pages") . '</dt><dd>' . $ebook->pages . '</dd>';
 
-        $url = route('ilib.ebook.show', ['ebook' => $ebook->id]);
+        $url = $ebook->url;
         $publisher = trans("ebook::common.publisher_id_th") . ': ' . $ebook->publisher;
 
         return <<<"ITEM"
@@ -59,7 +59,7 @@ ITEM;
         <a href="$url">
             <div class="ebook-cover">
                 {$ebook->present()->featured_image}
-                <div class="security">{$ebook->present()->securityFormated('primary')}</div>
+                <div class="security">{$ebook->present()->securityFormated('success')}</div>
             </div>
         </a>
         <div class="inner">
@@ -131,7 +131,26 @@ ITEM;
     {
         $html = '';
         foreach ($ebooks as $ebook) {
-            $html .= '<div class="ebook-slider-item"></div>';
+            $url = $ebook->url;
+            $publisher = trans('ebook::common.publisher_id_th').": {$ebook->publisher}, {$ebook->pyear}";
+            $html .= <<<"ITEM"
+<div class="ebook-slider-item">
+    <a href="$url">
+        <div class="ebook-cover">
+            {$ebook->present()->featured_image}
+            <div class="security">{$ebook->present()->securityFormated('success')}</div>
+        </div>
+    </a>
+    <div class="inner">
+        <a href="$url"><div class="title">{$ebook->title}</div></a>
+        <div class="details">
+            {$ebook->writer}<br>
+            $publisher<br>
+            <small>{$ebook->present()->fileicon} {$ebook->present()->filesize}</small><small><i class="fa fa-eye"></i> {$ebook->hit}</small>
+        </div>
+    </div>
+</div>
+ITEM;
         }
 
         return $html ? "<div class=\"bxslider ebook-slider\">$html</div>" : '';

@@ -1,8 +1,8 @@
 @extends('ilib::layouts.frontend')
 @section('content')
-    <div class="page-search">
+    <div class="ilib-search">
         <div class="main-heading">
-            <i class="fa fa-search text-success"></i> {{trans('ilib::common.search_result')}}:
+            <i class="fa fa-search text-success"></i> {{trans('common.search_result')}}:
             @if($total)
                 <small class="text-danger">{{$total}} {{trans('ebook::common.ebook')}}</small>
             @endif
@@ -66,7 +66,7 @@
             {!! Form::close() !!}
         </div>
         @if($total)
-            @include('ilib::frontend._display_options', ['options' => $search_options])
+            @include('_display_options', ['options' => $search_options, 'page_hint' => trans('ilib::common.page_hint')])
         @endif
         <div class="ebooks">
             @if($total)

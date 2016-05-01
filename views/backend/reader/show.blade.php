@@ -3,7 +3,7 @@
     <table class="table table-hover table-striped table-bordered table-detail">
         <tr>
             <td>ID</td>
-            <td><strong>{{$reader->id}}</strong></td>
+            <td><strong>{{$reader->user_id}}</strong></td>
         </tr>
         <tr>
             <td>{{ trans('ilib::reader.code') }}</td>

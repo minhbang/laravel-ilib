@@ -5,7 +5,7 @@ return [
      */
     'add_route' => true,
     /**
-     * Default options
+     * Default display options
      */
     'options'   => [
         'category' => [
@@ -13,15 +13,126 @@ return [
             'page_size' => 6,
             'type'      => 'th',
         ],
-        'search' => [
+        'search'   => [
             'sort'      => 'name.asc',
             'page_size' => 6,
             'type'      => 'th',
         ],
-        'home' => [
-            'sort'      => 'name.asc',
-            'page_size' => 6,
-            'type'      => 'th',
+    ],
+
+    // Cấu hình menu cho module ilib
+    'menu'      => [
+        // Định nghĩa menu zones cho ilib
+        'zones'      => [
+            'ilib_backend' => [
+                'sidebar' => [
+                    'items'     => [
+                        'dashboard'   => [
+                            'url'   => 'route:ilib.backend.dashboard',
+                            'label' => 'trans:backend.dashboard',
+                            'icon'  => 'dashboard',
+                            'class' => 'special_link',
+                        ],
+                        'home'        => [
+                            'url'        => 'route:ilib.index',
+                            'label'      => 'trans:common.home',
+                            'icon'       => 'home',
+                            'attributes' => ['target' => '_blank'],
+                        ],
+                        'content'     => ['label' => 'trans:menu::common.items.content', 'icon' => 'fa-files-o'],
+                        'user'        => ['label' => 'trans:menu::common.items.user', 'icon' => 'fa-university'],
+                        'statistic'   => ['label' => 'trans:ilib::common.statistics', 'icon' => 'fa-bar-chart', 'active' => 'ilib/backend/statistics*'],
+                        'setting'     => ['label' => 'trans:menu::common.items.setting', 'icon' => 'fa-cogs'],
+                        'maintenance' => ['label' => 'trans:menu::common.items.maintenance', 'icon' => 'fa-wrench'],
+                    ],
+                    'presenter' => 'metis',
+                    'options'   => [
+                        'attributes' => ['id' => 'side-menu'],
+                    ],
+                ],
+            ],
+        ],
+        'presenters' => [],
+        'types'      => [],
+        // Định nghĩa menus cho ilib
+        'menus'      => [
+            'ilib_backend.sidebar.content.category'  => [
+                'priority' => 1,
+                'url'      => 'route:ilib.backend.category.index',
+                'label'    => 'trans:category::common.category',
+                'icon'     => 'fa-sitemap',
+                'active'   => 'ilib/backend/category*',
+            ],
+            'ilib_backend.sidebar.content.ebook'     => [
+                'priority' => 2,
+                'url'      => 'route:ilib.backend.ebook.index',
+                'label'    => 'trans:ebook::common.ebooks',
+                'icon'     => 'fa-book',
+                'active'   => 'ilib/backend/ebook*',
+            ],
+            'ilib_backend.sidebar.user.reader'       => [
+                'priority' => 1,
+                'url'      => 'route:ilib.backend.reader.index',
+                'label'    => 'trans:ilib::reader.reader',
+                'icon'     => 'fa-user',
+                'active'   => ['backend/reader', 'backend/reader/*'],
+            ],
+            'ilib_backend.sidebar.user.reader_ebook' => [
+                'priority' => 2,
+                'url'      => 'route:ilib.backend.reader_ebook.index',
+                'label'    => 'trans:ilib::reader.allow_ebooks',
+                'icon'     => 'fa-legal',
+                'active'   => 'backend/reader_ebook*',
+            ],
+
+            'ilib_backend.sidebar.statistic.category'  => [
+                'url'    => 'route:ilib.backend.statistics.category',
+                'label'  => 'trans:ilib::common.statistics_category',
+                'icon'   => 'fa-bars',
+                'active' => 'ilib/backend/statistics/category',
+            ],
+            'ilib_backend.sidebar.statistic.language'  => [
+                'url'    => 'route:ilib.backend.statistics.enum|type:language',
+                'label'  => 'trans:ilib::common.statistics_language',
+                'icon'   => 'fa-bars',
+                'active' => 'ilib/backend/statistics/enum/language',
+            ],
+            'ilib_backend.sidebar.statistic.security'  => [
+                'url'    => 'route:ilib.backend.statistics.enum|type:security',
+                'label'  => 'trans:ilib::common.statistics_security',
+                'icon'   => 'fa-bars',
+                'active' => 'ilib/backend/statistics/enum/security',
+            ],
+            'ilib_backend.sidebar.statistic.writer'    => [
+                'url'    => 'route:ilib.backend.statistics.enum|type:writer',
+                'label'  => 'trans:ilib::common.statistics_writer',
+                'icon'   => 'fa-bars',
+                'active' => 'ilib/backend/statistics/enum/writer',
+            ],
+            'ilib_backend.sidebar.statistic.publisher' => [
+                'url'    => 'route:ilib.backend.statistics.enum|type:publisher',
+                'label'  => 'trans:ilib::common.statistics_publisher',
+                'icon'   => 'fa-bars',
+                'active' => 'ilib/backend/statistics/enum/publisher',
+            ],
+            'ilib_backend.sidebar.statistic.pplace'    => [
+                'url'    => 'route:ilib.backend.statistics.enum|type:pplace',
+                'label'  => 'trans:ilib::common.statistics_pplace',
+                'icon'   => 'fa-bars',
+                'active' => 'ilib/backend/statistics/enum/pplace',
+            ],
+            'ilib_backend.sidebar.statistic.read'      => [
+                'url'    => 'route:ilib.backend.statistics.read',
+                'label'  => 'trans:ilib::common.statistics_read',
+                'icon'   => 'fa-bars',
+                'active' => 'ilib/backend/statistics/read',
+            ],
+            'ilib_backend.sidebar.setting.enum'        => [
+                'url'    => 'route:ilib.backend.enum.index',
+                'label'  => 'trans:enum::common.enums',
+                'icon'   => 'fa-list',
+                'active' => 'ilib/backend/enum*',
+            ],
         ],
     ],
 ];

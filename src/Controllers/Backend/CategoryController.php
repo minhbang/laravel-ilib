@@ -2,7 +2,9 @@
 namespace Minhbang\ILib\Controllers\Backend;
 
 use Minhbang\Category\Controller;
-use Minhbang\Category\Item;
+use Minhbang\Category\Category;
+use Minhbang\Ebook\Ebook;
+
 /**
  * Class CategoryController
  *
@@ -10,11 +12,10 @@ use Minhbang\Category\Item;
  */
 class CategoryController extends Controller
 {
-    protected $type = 'ebook';
-
     public function __construct()
     {
-        Item::$use_moderator = false;
+        $this->type = Ebook::class;
+        Category::$use_moderator = false;
         $this->views['index'] = 'ilib::backend.category';
         parent::__construct();
     }

@@ -1,12 +1,12 @@
 <?php
 namespace Minhbang\ILib;
 
-use Minhbang\LaravelKit\Extensions\Request as BaseRequest;
+use Minhbang\Kit\Extensions\Request as BaseRequest;
 
 /**
- * Class Request
+ * Class ReaderRequest
  *
- * @package Minhbang\Ebook
+ * @package Minhbang\ILib
  */
 class ReaderRequest extends BaseRequest
 {

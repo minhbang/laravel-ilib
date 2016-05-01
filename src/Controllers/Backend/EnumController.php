@@ -21,9 +21,12 @@ class EnumController extends BaseController
      */
     protected $route_prefix = 'ilib.';
 
+    /**
+     * EnumController constructor.
+     */
     public function __construct()
     {
-        Enum::$resource_classes = [Ebook::class];
+        Enum::onlyResources([Ebook::class]);
         parent::__construct();
     }
 }

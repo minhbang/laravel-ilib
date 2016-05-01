@@ -8,14 +8,14 @@
 
 @section('main')
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-sm-8">
             @parent
             <div id="content">
                 @section('content')
                 @show
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-sm-4">
             <div id="sidebar">
                 @if(!Route::currentRouteNamed('ilib.search'))
                     <div class="search">
@@ -34,6 +34,8 @@
                         <div class="panel-heading">{{trans('ilib::common.categories')}}</div>
                         <div id="categories-tree"></div>
                     </div>
+                        <a href="{{route('ilib.ebook.upload')}}" class="btn btn-success btn-block">{{trans('ilib::common.upload_ebooks')
+                        }}</a>
                 @show
             </div>
         </div>
@@ -43,12 +45,13 @@
 @section('script')
     <script type="text/javascript">
         var category_route = '{{route('ilib.category.show', ['category' => '__ID__'])}}',
-            categories_data = {!! json_encode($ebook_category->tree( isset($category) ? $category : null)) !!};
+            categories_data = {!! $ebook_category->tree( isset($category) ? $category : null) !!};
 
         $(document).ready(function () {
             var categories_tree = $('#categories-tree');
             categories_tree.treeview({
                 data: categories_data,
+                selectedBackColor: '#00c853',
                 levels: 1
             });
             categories_tree.on('click', 'li', function (e) {

@@ -3,6 +3,7 @@ namespace Minhbang\ILib;
 
 use Illuminate\Routing\Router;
 use Minhbang\Kit\Extensions\BaseServiceProvider;
+use MenuManager;
 
 /**
  * Class ServiceProvider
@@ -31,7 +32,7 @@ class ServiceProvider extends BaseServiceProvider
                     database_path('migrations/2015_12_27_000000_create_readers_table.php'),
                 __DIR__ . '/../database/migrations/2015_12_27_100000_create_ebook_reader_table.php' =>
                     database_path('migrations/2015_12_27_100000_create_ebook_reader_table.php'),
-                __DIR__ . '/../database/migrations/2015_12_27_200000_create_read_ebook_table.php' =>
+                __DIR__ . '/../database/migrations/2015_12_27_200000_create_read_ebook_table.php'   =>
                     database_path('migrations/2015_12_27_200000_create_read_ebook_table.php'),
             ],
             'db'
@@ -43,6 +44,7 @@ class ServiceProvider extends BaseServiceProvider
         $router->pattern('reader', '[0-9]+');
         // model bindings
         $router->model('reader', 'Minhbang\ILib\Reader');
+        MenuManager::registerMenus(config('ilib.menu'));
     }
 
     /**

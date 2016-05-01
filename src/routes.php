@@ -1,8 +1,16 @@
 <?php
 // Backend
-Route::group(['prefix' => 'ilib/backend', 'namespace' => 'Minhbang\ILib\Controllers\Backend'], function () {
+// ---------------------------------------------------------------------------------------------------------------------
+Route::group(['prefix' => 'ilib/backend', 'middleware' => 'role:tv.*', 'namespace' => 'Minhbang\ILib\Controllers\Backend'], function () {
     // Dasboard
     Route::get('/', ['as' => 'ilib.backend.dashboard', 'uses' => 'HomeController@index']);
+    // Statistics
+    Route::group(['prefix' => 'statistics', 'as' => 'ilib.backend.statistics.'], function () {
+        Route::get('enum/{type}', ['as' => 'enum', 'uses' => 'StatisticsController@enum']);
+        Route::get('category', ['as' => 'category', 'uses' => 'StatisticsController@category']);
+        Route::get('read', ['as' => 'read', 'uses' => 'StatisticsController@read']);
+        Route::get('read_data', ['as' => 'read_data', 'uses' => 'StatisticsController@read_data']);
+    });
 
     //Category Manage
     Route::group(['prefix' => 'category', 'as' => 'ilib.backend.category.'], function () {
@@ -16,6 +24,7 @@ Route::group(['prefix' => 'ilib/backend', 'namespace' => 'Minhbang\ILib\Controll
 
     // Ebook Manage
     Route::group(['prefix' => 'ebook', 'as' => 'ilib.backend.ebook.'], function () {
+        Route::get('status/{status}', ['as' => 'index_status', 'uses' => 'EbookController@index']);
         Route::get('data', ['as' => 'data', 'uses' => 'EbookController@data']);
         Route::get('select/{query}', ['as' => 'select', 'uses' => 'EbookController@select']);
         Route::get('{ebook}/preview', ['as' => 'preview', 'uses' => 'EbookController@preview']);
@@ -48,16 +57,31 @@ Route::group(['prefix' => 'ilib/backend', 'namespace' => 'Minhbang\ILib\Controll
         Route::delete('{reader}/{ebook}', ['as' => 'destroy', 'uses' => 'ReaderEbookController@destroy']);
         Route::post('{reader}/{ebook}', ['as' => 'quick_update', 'uses' => 'ReaderEbookController@quickUpdate']);
     });
+
+    // Load du lieu tu ILib 4.0
+    /*Route::group(['prefix' => 'ilib40', 'as' => 'ilib.backend.ilib40.'], function () {
+        Route::get('/', ['as' => 'index', 'uses' => 'Ilib40Controller@index']);
+    });*/
 });
 
 // Frontend
+// ---------------------------------------------------------------------------------------------------------------------
 Route::group(['prefix' => 'ilib', 'as' => 'ilib.', 'namespace' => 'Minhbang\ILib\Controllers\Frontend'], function () {
+    // Home
     Route::get('/', ['as' => 'index', 'uses' => 'HomeController@index']);
+    // Category
     Route::get('category/{category}', ['as' => 'category.show', 'uses' => 'CategoryController@show']);
     // Ebook
     Route::group(['prefix' => 'ebook', 'as' => 'ebook.'], function () {
-        Route::get('{ebook}', ['as' => 'show', 'uses' => 'EbookController@show']);
-        Route::get('{ebook}/{slug}.pdf', ['as' => 'full', 'uses' => 'EbookController@full']);
+        // Xem chi tiết
+        Route::get('{ebook}', ['as' => 'detail', 'middleware' => 'reader:detail', 'uses' => 'EbookController@detail']);
+        // Đọc toàn văn
+        Route::get('{ebook}/{slug}.pdf', ['as' => 'view', 'middleware' => 'reader:view', 'uses' => 'EbookController@view']);
+        // Download
+        Route::get('{ebook}/file/{slug}.pdf', ['as' => 'download', 'middleware' => 'reader:download', 'uses' => 'EbookController@download']);
+        // Upload
+        Route::get('upload', ['as' => 'upload', 'middleware' => 'reader:upload', 'uses' => 'EbookController@upload']);
+        Route::post('upload', ['middleware' => 'reader:upload', 'uses' => 'EbookController@store']);
     });
     // Search
     Route::get('search', ['as' => 'search', 'uses' => 'SearchController@index']);

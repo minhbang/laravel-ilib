@@ -4,8 +4,10 @@ namespace Minhbang\ILib\Controllers\Frontend;
 use Minhbang\Ebook\Ebook;
 use Minhbang\ILib\Widgets\EbookWidget;
 use Illuminate\Http\Request;
-use Minhbang\Category\Item as Category;
-
+use Minhbang\Category\Category as Category;
+use Minhbang\Option\OptionableController;
+use Minhbang\ILib\DisplayOption;
+use CategoryManager;
 /**
  * Class SearchController
  *
@@ -13,14 +15,19 @@ use Minhbang\Category\Item as Category;
  */
 class SearchController extends Controller
 {
+    use OptionableController;
+
     /**
-     * @var string
+     * @return array
      */
-    protected $options_group = 'search';
-    /**
-     * @var string
-     */
-    protected $options_model = 'Minhbang\ILib\Options\DisplayOption';
+    protected function optionConfig()
+    {
+        return [
+            'zone'  => 'ilib',
+            'group' => 'search',
+            'class' => DisplayOption::class,
+        ];
+    }
 
     /**
      * Chuyển đổi search params 'key' thành 'column name',
@@ -62,7 +69,7 @@ class SearchController extends Controller
         $pyear_end = (int)mb_array_extract('pyear_end', $attributes);
         $pyear_end = $pyear_end >= $pyear_start ? $pyear_end : 0;
 
-        $query = Ebook::queryDefault()->withEnumTitles()->withCategoryTitle()
+        $query = Ebook::queryDefault()->published()->withEnumTitles()->withCategoryTitle()
             ->whereAttributes($attributes)->searchKeyword($q);
 
         if ($pyear_start || $pyear_end) {
@@ -81,10 +88,10 @@ class SearchController extends Controller
             $query->categorized($category);
         }
 
-        $ebooks = $this->getPaginate($query);
+        $ebooks = $this->optionAppliedPaginate($query);
         $total = $ebooks->total();
         $ebook_widget = new EbookWidget();
-        $categories = app('category')->manage('ebook')->selectize();
+        $categories = CategoryManager::root(Ebook::class)->selectize();
         $enums = (new Ebook())->loadEnums('id');
 
         $column_key = array_combine(

@@ -4,17 +4,17 @@ namespace Minhbang\ILib;
 use Minhbang\Kit\Extensions\Request as BaseRequest;
 
 /**
- * Class Request
+ * Class UploadRequest
  *
- * @package Minhbang\Ebook
+ * @package Minhbang\ILib
  */
-class ReaderEbookRequest extends BaseRequest
+class UploadRequest extends BaseRequest
 {
-    public $trans_prefix = 'ilib::reader';
+    public $trans_prefix = 'ebook::common';
     public $rules = [
-        'expires_at' => 'required',
-        'reader_id'   => 'required|integer|min:1',
-        'ebook_id'    => 'required|integer|min:1',
+        'title'    => 'required|max:255',
+        'summary'  => 'required',
+        'filename' => 'mimes:pdf|max:40960', // 40 Mb = 40*1024 Kb
     ];
 
     /**

@@ -5,7 +5,7 @@ return [
     'add_user'         => 'THÊM BẠN ĐỌC <small>chọn người dùng từ hệ thống</small>',
     'code'             => 'Mã bạn đọc',
     'code_th'          => 'Mã',
-    'security_id'      => 'Quyền truy cập',
+    'security_id'      => 'Quyền đọc',
     'user_id'          => 'Người dùng',
     'add_user_success' => 'Thêm bạn đọc mới thành công!',
     'add_user_error'   => 'Thêm bạn đọc mới thất bại!',
@@ -20,4 +20,5 @@ return [
     'add_allow_ebooks_error'   => 'Thêm bạn đọc mới thất bại!',
     'ebook_id'                 => 'Tài liệu',
     'reader_id'                => 'Bạn đọc',
+    'read_at'                  => 'Đọc lúc',
 ];

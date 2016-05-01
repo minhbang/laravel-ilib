@@ -1,7 +1,8 @@
 <?php
 namespace Minhbang\ILib\Controllers\Backend;
 
-use Minhbang\LaravelKit\Extensions\BackendController;
+use Minhbang\Ebook\Ebook;
+use Minhbang\Kit\Extensions\BackendController;
 
 /**
  * Class HomeController
@@ -15,6 +16,21 @@ class HomeController extends BackendController
      */
     public function index()
     {
-        return view('ilib::backend.index');
+        $ebook = new Ebook();
+        $statuses = $ebook->statusManager()->statusTitles();
+        $colors = ['', 'white', 'yellow', 'red', 'navy'];
+        $counters = [];
+        foreach ($statuses as $status => $title) {
+            $counters[] = [
+                'status' => $status,
+                'title'  => $title,
+                'color'  => $colors[$status],
+                'count'  => Ebook::status($status)->count(),
+            ];
+        }
+
+        $latest_ebooks = Ebook::queryDefault()->withEnumTitles()->latest()->take(5)->get();
+
+        return view('ilib::backend.index', compact('counters', 'latest_ebooks'));
     }
 }

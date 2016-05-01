@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEbookReaderTable extends Migration
+class CreateReadEbookTable extends Migration
 {
 
     /**
@@ -13,12 +13,11 @@ class CreateEbookReaderTable extends Migration
      */
     public function up()
     {
-        Schema::create('ebook_reader', function (Blueprint $table) {
-            $table->integer('ebook_id')->unsigned();
+        Schema::create('read_ebook', function (Blueprint $table) {
             $table->integer('reader_id')->unsigned();
-            $table->dateTime('expires_at');
-            $table->nullableTimestamps();
-            $table->primary(['ebook_id', 'reader_id']);
+            $table->integer('ebook_id')->unsigned();
+            $table->dateTime('read_at');
+            $table->primary(['ebook_id', 'reader_id', 'read_at']);
             $table->foreign('reader_id')->references('user_id')->on('readers')->onDelete('cascade');
             $table->foreign('ebook_id')->references('id')->on('ebooks')->onDelete('cascade');
         });
@@ -31,7 +30,7 @@ class CreateEbookReaderTable extends Migration
      */
     public function down()
     {
-        Schema::drop('ebook_reader');
+        Schema::drop('read_ebook');
     }
 
 }

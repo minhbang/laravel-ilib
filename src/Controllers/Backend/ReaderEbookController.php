@@ -3,7 +3,7 @@ namespace Minhbang\ILib\Controllers\Backend;
 
 use Minhbang\Ebook\Ebook;
 use Minhbang\ILib\ReaderEbookRequest;
-use Minhbang\LaravelKit\Extensions\BackendController as BaseController;
+use Minhbang\Kit\Extensions\BackendController as BaseController;
 use Minhbang\ILib\Reader;
 use Datatable;
 use Request;
@@ -62,7 +62,7 @@ class ReaderEbookController extends BaseController
             ]
         );
 
-        $readers = Reader::queryDefault()->forSelectize()->get()->all();
+        $readers = Reader::forSelectize()->get()->all();
         $ebooks = Ebook::forSelectize()->orderUpdated()->get()->all();
 
         return view(
@@ -89,7 +89,7 @@ class ReaderEbookController extends BaseController
             ->addColumn(
                 'index',
                 function (Reader $model) {
-                    return $model->id;
+                    return $model->user_id;
                 }
             )
             ->addColumn(
@@ -117,7 +117,7 @@ class ReaderEbookController extends BaseController
                     $expires_at = substr(mb_date_mysql2vn($model->expires_at), 0, -3);
 
                     return Html::linkQuickUpdate(
-                        $model->id,
+                        $model->user_id,
                         $expires_at,
                         [
                             'attr'      => 'expires_at',
@@ -128,7 +128,7 @@ class ReaderEbookController extends BaseController
                         ['class' => 'a-expires_at'],
                         route(
                             $this->route_prefix . 'backend.reader_ebook.quick_update',
-                            ['reader' => $model->id, 'ebook' => $model->ebook_id]
+                            ['reader' => $model->user_id, 'ebook' => $model->ebook_id]
                         )
                     );
                 }
@@ -138,7 +138,7 @@ class ReaderEbookController extends BaseController
                 function (Reader $model) {
                     return Html::tableActions(
                         $this->route_prefix . 'backend.reader_ebook',
-                        ['reader' => $model->id, 'ebook' => $model->ebook_id],
+                        ['reader' => $model->user_id, 'ebook' => $model->ebook_id],
                         trans(
                             'ilib::reader.allowed_title',
                             ['reader' => "{$model->user_name} ({$model->user_username})", 'ebook' => $model->ebook_title]
@@ -184,7 +184,7 @@ class ReaderEbookController extends BaseController
      */
     public function destroy(Reader $reader, Ebook $ebook)
     {
-        $reader->ebooks()->detach($ebook->id);
+        DB::table('ebook_reader')->where('ebook_id', $ebook->id)->where('reader_id', $reader->user_id)->delete();
 
         return response()->json(
             [

@@ -2,7 +2,7 @@
 namespace Minhbang\ILib;
 
 use Minhbang\Enum\EnumPresenter;
-use Minhbang\LaravelKit\Traits\Presenter\DatetimePresenter;
+use Minhbang\Kit\Traits\Presenter\DatetimePresenter;
 
 /**
  * Class Presenter

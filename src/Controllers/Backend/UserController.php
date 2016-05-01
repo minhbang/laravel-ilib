@@ -1,7 +1,7 @@
 <?php
 namespace Minhbang\ILib\Controllers\Backend;
 
-use Minhbang\LaravelKit\Extensions\BackendController as BaseController;
+use Minhbang\Kit\Extensions\BackendController as BaseController;
 
 /**
  * Class UserController

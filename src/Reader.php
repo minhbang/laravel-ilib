@@ -1,35 +1,46 @@
 <?php
 namespace Minhbang\ILib;
 
+use Carbon\Carbon;
 use Laracasts\Presenter\PresentableTrait;
 use Minhbang\Ebook\Ebook;
 use Minhbang\Enum\EnumContract;
 use Minhbang\Enum\HasEnum;
-use Minhbang\LaravelKit\Extensions\Model;
-use Minhbang\LaravelKit\Traits\Model\DatetimeQuery;
-use Minhbang\LaravelKit\Traits\Model\SearchQuery;
+use Minhbang\Enum\Enum;
+use Minhbang\Kit\Extensions\Model;
+use Minhbang\Kit\Traits\Model\DatetimeQuery;
+use Minhbang\Kit\Traits\Model\SearchQuery;
 
 /**
  * Class Reader
  *
  * @package Minhbang\ILib
- * @property integer $id
+ * @property integer $user_id
  * @property string $code
  * @property integer $security_id
- * @property integer $user_id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read string $security
  * @property-read string $user_name
  * @property-read string $user_username
- * @property-read string $expires_at
- * @property-read integer $ebook_id
+ * @property-read \Minhbang\User\User $user
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Minhbang\Ebook\Ebook[] $ebooks
+ * @property-read int $ebook_id
  * @property-read string $ebook_title
- * @property-read \Minhbang\LaravelUser\User $user
+ * @property-read string $expires_at
+ * @method static \Illuminate\Database\Query\Builder|\Minhbang\ILib\Reader whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Minhbang\ILib\Reader whereCode($value)
+ * @method static \Illuminate\Database\Query\Builder|\Minhbang\ILib\Reader whereSecurityId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Minhbang\ILib\Reader whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Minhbang\ILib\Reader whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Minhbang\ILib\Reader forSelectize($ignore = null, $take = 10)
  * @method static \Illuminate\Database\Query\Builder|\Minhbang\ILib\Reader queryDefault()
+ * @method static \Illuminate\Database\Query\Builder|\Minhbang\ILib\Reader allowedEbook()
  * @method static \Illuminate\Database\Query\Builder|\Minhbang\ILib\Reader withUser()
- * @method static \Illuminate\Database\Query\Builder|\Minhbang\LaravelKit\Extensions\Model except($id = null)
- * @method static \Illuminate\Database\Query\Builder|\Minhbang\LaravelKit\Extensions\Model findText($column, $text)
+ * @method static \Illuminate\Database\Query\Builder|\Minhbang\Kit\Extensions\Model except($id = null)
+ * @method static \Illuminate\Database\Query\Builder|\Minhbang\Kit\Extensions\Model whereAttributes($attributes)
+ * @method static \Illuminate\Database\Query\Builder|\Minhbang\Kit\Extensions\Model findText($column, $text)
+ * @method static \Illuminate\Database\Query\Builder|\Minhbang\ILib\Reader searchKeyword($keyword, $columns = null)
  * @method static \Illuminate\Database\Query\Builder|\Minhbang\ILib\Reader searchWhere($column, $operator = '=', $fn = null)
  * @method static \Illuminate\Database\Query\Builder|\Minhbang\ILib\Reader searchWhereIn($column, $fn)
  * @method static \Illuminate\Database\Query\Builder|\Minhbang\ILib\Reader searchWhereBetween($column, $fn = null)
@@ -42,9 +53,7 @@ use Minhbang\LaravelKit\Traits\Model\SearchQuery;
  * @method static \Illuminate\Database\Query\Builder|\Minhbang\ILib\Reader thisWeek($field = 'created_at')
  * @method static \Illuminate\Database\Query\Builder|\Minhbang\ILib\Reader thisMonth($field = 'created_at')
  * @method static \Illuminate\Database\Query\Builder|\Minhbang\ILib\Reader withEnumTitles()
- * @method static \Illuminate\Database\Query\Builder|\Minhbang\ILib\Reader forSelectize($ignore = null, $take = 10)
- * @method static \Illuminate\Database\Query\Builder|\Minhbang\ILib\Reader allowedEbook()
- * @property-read \Illuminate\Database\Eloquent\Collection|\Minhbang\Ebook\Ebook[] $ebooks
+ * @mixin \Eloquent
  */
 class Reader extends Model implements EnumContract
 {
@@ -55,6 +64,7 @@ class Reader extends Model implements EnumContract
     protected $presenter = ReaderPresenter::class;
     protected $table = 'readers';
     protected $fillable = ['code', 'security_id', 'user_id'];
+    protected $primaryKey = 'user_id';
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -65,11 +75,29 @@ class Reader extends Model implements EnumContract
     }
 
     /**
+     * Danh sách ebooks mà reader đã được gán quyền đọc tạm thời
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function ebooks()
     {
-        return $this->belongsToMany(Ebook::class);
+        return $this->belongsToMany(Ebook::class)->wherePivot('expires_at', '>=', Carbon::now());
+    }
+
+    /**
+     * Reader có thể đọc $ebook khi:
+     * - Quyền đọc >= Mức bảo mật của $ebook
+     * - Hoặc được gán quyền đọc tạm thời đối với $ebook
+     * - Hoặc người của Thư viện
+     *
+     * @param \Minhbang\Ebook\Ebook $ebook
+     *
+     * @return bool
+     */
+    public function canRead($ebook)
+    {
+        return Enum::compare($this->security_id, $ebook->security_id, '>=') ||
+        in_array($ebook->id, $this->ebooks->pluck('id')->all()) || user()->hasRole('tv.*');
     }
 
     /**
@@ -88,6 +116,7 @@ class Reader extends Model implements EnumContract
             ->leftJoin('users', "{$this->table}.user_id", '=', 'users.id')
             ->leftJoin('user_groups', 'user_groups.id', '=', 'users.group_id')
             ->addSelect([
+                "{$this->table}.user_id as id",
                 "users.name",
                 "users.username",
                 "user_groups.full_name as group_name",
@@ -113,7 +142,7 @@ class Reader extends Model implements EnumContract
     public function scopeAllowedEbook($query)
     {
         return $query
-            ->join('ebook_reader', "{$this->table}.id", '=', 'ebook_reader.reader_id')
+            ->join('ebook_reader', "{$this->table}.user_id", '=', 'ebook_reader.reader_id')
             ->join('ebooks', "ebooks.id", '=', 'ebook_reader.ebook_id')
             ->addSelect(['ebook_reader.expires_at', 'ebook_reader.ebook_id', 'ebooks.title as ebook_title'])
             ->orderBy('ebook_reader.created_at');

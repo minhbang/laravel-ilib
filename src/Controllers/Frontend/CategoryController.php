@@ -1,9 +1,11 @@
 <?php
 namespace Minhbang\ILib\Controllers\Frontend;
 
-use Minhbang\Category\Item as Category;
+use Minhbang\Category\Category as Category;
 use Minhbang\Ebook\Ebook;
 use Minhbang\ILib\Widgets\EbookWidget;
+use Minhbang\Option\OptionableController;
+use Minhbang\ILib\DisplayOption;
 
 /**
  * Class CategoryController
@@ -12,17 +14,24 @@ use Minhbang\ILib\Widgets\EbookWidget;
  */
 class CategoryController extends Controller
 {
-    /**
-     * @var string
-     */
-    protected $options_group = 'category';
-    /**
-     * @var string
-     */
-    protected $options_model = 'Minhbang\ILib\Options\DisplayOption';
+    use OptionableController;
 
     /**
-     * @param \Minhbang\Category\Item $category
+     * @return array
+     */
+    protected function optionConfig()
+    {
+        return [
+            'zone'  => 'ilib',
+            'group' => 'category',
+            'class' => DisplayOption::class,
+        ];
+    }
+
+    /**
+     * Duyệt danh sách Tài liệu thuộc $category
+     *
+     * @param \Minhbang\Category\Category $category
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -35,7 +44,7 @@ class CategoryController extends Controller
         }
         $breadcrumbs['#'] = $category->title;
         $this->buildBreadcrumbs($breadcrumbs);
-        $ebooks = $this->getPaginate(Ebook::queryDefault()->withEnumTitles()->categorized($category));
+        $ebooks = $this->optionAppliedPaginate(Ebook::queryDefault()->published()->withEnumTitles()->categorized($category));
         $ebook_widget = new EbookWidget();
 
         return view('ilib::frontend.category.show', compact('category', 'ebooks', 'ebook_widget'));

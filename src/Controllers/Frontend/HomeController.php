@@ -12,21 +12,12 @@ use Minhbang\Ebook\Ebook;
 class HomeController extends Controller
 {
     /**
-     * @var string
-     */
-    protected $options_group = 'home';
-    /**
-     * @var string
-     */
-    protected $options_model = 'Minhbang\ILib\Options\DisplayOption';
-
-    /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
         $ebook_widget = new EbookWidget();
-        $query = Ebook::queryDefault()->withEnumTitles()->withCategoryTitle()->orderUpdated();
+        $query = Ebook::queryDefault()->published()->withEnumTitles()->withCategoryTitle()->orderUpdated();
         $query1 = clone $query;
         $ebook_latest = $query->take(6)->get();
         $ebook_featured = $query1->featured()->get();

@@ -2,13 +2,13 @@
 namespace Minhbang\ILib\Controllers\Backend;
 
 use Minhbang\ILib\ReaderRequest;
-use Minhbang\LaravelKit\Extensions\BackendController as BaseController;
+use Minhbang\Kit\Extensions\BackendController as BaseController;
 use Minhbang\ILib\Reader;
 use Datatable;
-use Minhbang\LaravelKit\Traits\Controller\QuickUpdateActions;
+use Minhbang\Kit\Traits\Controller\QuickUpdateActions;
 use Request;
 use Html;
-use Minhbang\LaravelUser\User;
+use Minhbang\User\User;
 
 /**
  * Class ReaderController
@@ -60,7 +60,7 @@ class ReaderController extends BaseController
         $this->buildHeading([trans('common.manage'), $name], 'fa-file-pdf-o', ['#' => $name]);
 
         // 10 users chưa phải là reader
-        $selectize_users = User::forSelectize(Reader::all()->pluck('id'), 10)->get()->all();
+        $selectize_users = User::forSelectize(Reader::all()->pluck('user_id'), 10)->get()->all();
         $reader = new Reader();
 
         return view(
@@ -89,14 +89,14 @@ class ReaderController extends BaseController
             ->addColumn(
                 'index',
                 function (Reader $model) {
-                    return $model->id;
+                    return $model->user_id;
                 }
             )
             ->addColumn(
                 'code',
                 function (Reader $model) {
                     return Html::linkQuickUpdate(
-                        $model->id,
+                        $model->user_id,
                         $model->code,
                         [
                             'label'     => $model->code,
@@ -119,7 +119,7 @@ class ReaderController extends BaseController
                 'security_id',
                 function (Reader $model) {
                     return Html::linkQuickUpdate(
-                        $model->id,
+                        $model->user_id,
                         $model->security_id,
                         [
                             'label'     => $model->security,
@@ -137,12 +137,11 @@ class ReaderController extends BaseController
                 function (Reader $model) {
                     return Html::tableActions(
                         $this->route_prefix . 'backend.reader',
-                        ['reader' => $model->id],
+                        ['reader' => $model->user_id],
                         $model->user_name,
                         trans('ilib::reader.reader'),
                         [
                             'renderEdit' => false,
-                            'renderShow' => 'modal-large',
                         ]
                     );
                 }
@@ -196,7 +195,7 @@ class ReaderController extends BaseController
         return response()->json(
             [
                 'type'    => 'success',
-                'content' => trans('common.delete_object_success', ['name' => trans('ilib::reader.readers')]),
+                'content' => trans('common.delete_object_success', ['name' => trans('ilib::reader.reader')]),
             ]
         );
     }
@@ -211,7 +210,7 @@ class ReaderController extends BaseController
     public function select($username)
     {
         return response()->json(
-            Reader::queryDefault()->forSelectize()->findText('users.username', $username)->get()->all()
+            Reader::forSelectize()->findText('users.username', $username)->get()->all()
         );
     }
 
