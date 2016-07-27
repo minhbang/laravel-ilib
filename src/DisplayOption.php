@@ -26,12 +26,12 @@ class DisplayOption extends Option
     {
         return [
             'sort'      => [
-                'name.asc'     => trans('common.sort_name') . trans('common.sort_str_asc'),
-                'name.desc'    => trans('common.sort_name') . trans('common.sort_str_desc'),
-                'pyear.asc'    => trans('ilib::common.sort_pyear') . trans('common.sort_time_asc'),
-                'pyear.desc'   => trans('ilib::common.sort_pyear') . trans('common.sort_time_desc'),
-                'updated.asc'  => trans('common.sort_updated') . trans('common.sort_time_asc'),
-                'updated.desc' => trans('common.sort_updated') . trans('common.sort_time_desc'),
+                'name.asc'     => trans('ilib::common.sort_name') . trans('ilib::common.sort_str_asc'),
+                'name.desc'    => trans('ilib::common.sort_name') . trans('ilib::common.sort_str_desc'),
+                'pyear.asc'    => trans('ilib::common.sort_pyear') . trans('ilib::common.sort_time_asc'),
+                'pyear.desc'   => trans('ilib::common.sort_pyear') . trans('ilib::common.sort_time_desc'),
+                'updated.asc'  => trans('ilib::common.sort_updated') . trans('ilib::common.sort_time_asc'),
+                'updated.desc' => trans('ilib::common.sort_updated') . trans('ilib::common.sort_time_desc'),
             ],
             'page_size' => [6 => 6, 12 => 12, 30 => 30, 60 => 60],
         ];

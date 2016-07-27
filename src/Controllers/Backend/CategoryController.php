@@ -3,8 +3,6 @@ namespace Minhbang\ILib\Controllers\Backend;
 
 use Minhbang\Category\Controller;
 use Minhbang\Category\Category;
-use Minhbang\Ebook\Ebook;
-
 /**
  * Class CategoryController
  *
@@ -12,9 +10,10 @@ use Minhbang\Ebook\Ebook;
  */
 class CategoryController extends Controller
 {
+    protected $type = 'ebook';
+
     public function __construct()
     {
-        $this->type = Ebook::class;
         Category::$use_moderator = false;
         $this->views['index'] = 'ilib::backend.category';
         parent::__construct();

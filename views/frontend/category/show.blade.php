@@ -5,7 +5,7 @@
             <i class="fa fa-folder-open-o text-success"></i> {{$category->title}}
         </div>
 
-        @include('_display_options', ['options' => $category_options, 'page_hint' => trans('ilib::common.page_hint')])
+        @include('ilib::frontend._display_options', ['options' => $category_options])
 
         <div class="ebooks">
             {!! $ebook_widget->items($ebooks, $category_options->get('type')) !!}

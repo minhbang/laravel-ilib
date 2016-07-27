@@ -70,7 +70,7 @@ Route::group(['prefix' => 'ilib', 'as' => 'ilib.', 'namespace' => 'Minhbang\ILib
     // Home
     Route::get('/', ['as' => 'index', 'uses' => 'HomeController@index']);
     // Category
-    Route::get('category/{category}/{slug}', ['as' => 'category.show', 'uses' => 'CategoryController@show']);
+    Route::get('category/{category}', ['as' => 'category.show', 'uses' => 'CategoryController@show']);
     // Ebook
     Route::group(['prefix' => 'ebook', 'as' => 'ebook.'], function () {
         // Xem chi tiết

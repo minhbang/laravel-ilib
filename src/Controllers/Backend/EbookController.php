@@ -18,9 +18,9 @@ class EbookController extends BaseController
     /**
      * @var string
      */
-    public $route_prefix = 'ilib.';
+    protected $route_prefix = 'ilib.';
 
-    public $allStatus = false;
+    protected $allStatus = false;
 
     /**
      * Lấy danh sách ebooks sử dụng cho selectize ebooks

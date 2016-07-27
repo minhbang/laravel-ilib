@@ -1,7 +1,6 @@
 <?php
 namespace Minhbang\ILib;
 
-use Carbon\Carbon;
 use Laracasts\Presenter\PresentableTrait;
 use Minhbang\Ebook\Ebook;
 use Minhbang\Enum\EnumContract;
@@ -81,7 +80,8 @@ class Reader extends Model implements EnumContract
      */
     public function ebooks()
     {
-        return $this->belongsToMany(Ebook::class)->wherePivot('expires_at', '>=', Carbon::now());
+        //TODO: Thêm kiểm tra điều kiện 'Thời hạn' => Lấy các ebooks còn hiệu lực
+        return $this->belongsToMany(Ebook::class);
     }
 
     /**
@@ -97,7 +97,7 @@ class Reader extends Model implements EnumContract
     public function canRead($ebook)
     {
         return Enum::compare($this->security_id, $ebook->security_id, '>=') ||
-        in_array($ebook->id, $this->ebooks->pluck('id')->all()) || user()->hasRole('tv.*');
+        in_array($ebook->id, $this->ebooks->pluck('id')) || user()->hasRole('tv.*');
     }
 
     /**

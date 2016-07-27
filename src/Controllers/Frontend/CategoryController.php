@@ -16,9 +16,6 @@ class CategoryController extends Controller
 {
     use OptionableController;
 
-    /**
-     * @return array
-     */
     protected function optionConfig()
     {
         return [

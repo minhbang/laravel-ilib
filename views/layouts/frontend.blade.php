@@ -51,7 +51,6 @@
             var categories_tree = $('#categories-tree');
             categories_tree.treeview({
                 data: categories_data,
-                selectedBackColor: '#00c853',
                 levels: 1
             });
             categories_tree.on('click', 'li', function (e) {

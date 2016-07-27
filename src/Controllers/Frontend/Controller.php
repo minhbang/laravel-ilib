@@ -4,7 +4,6 @@ namespace Minhbang\ILib\Controllers\Frontend;
 use Minhbang\Kit\Extensions\Controller as BaseController;
 use View;
 use CategoryManager;
-use Minhbang\Ebook\Ebook;
 
 /**
  * Class Controller
@@ -19,7 +18,7 @@ abstract class Controller extends BaseController
     public function __construct()
     {
         parent::__construct();
-        View::share('ebook_category', CategoryManager::of(Ebook::class));
+        View::share('ebook_category', CategoryManager::root('ebook'));
     }
 
     /**

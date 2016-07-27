@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Minhbang\Category\Category as Category;
 use Minhbang\Option\OptionableController;
 use Minhbang\ILib\DisplayOption;
-use CategoryManager;
 /**
  * Class SearchController
  *
@@ -91,7 +90,7 @@ class SearchController extends Controller
         $ebooks = $this->optionAppliedPaginate($query);
         $total = $ebooks->total();
         $ebook_widget = new EbookWidget();
-        $categories = CategoryManager::of(Ebook::class)->selectize();
+        $categories = app('category-manager')->root('ebook')->selectize();
         $enums = (new Ebook())->loadEnums('id');
 
         $column_key = array_combine(

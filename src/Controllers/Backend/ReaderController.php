@@ -27,7 +27,7 @@ class ReaderController extends BaseController
      */
     protected $layout = 'ilib::layouts.backend';
 
-    public $route_prefix = 'ilib.';
+    protected $route_prefix = 'ilib.';
 
     /**
      *

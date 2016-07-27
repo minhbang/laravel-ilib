@@ -17,8 +17,8 @@ class HomeController extends BackendController
     public function index()
     {
         $ebook = new Ebook();
-        $statuses = $ebook->accessControl()->pluck('title');
-        $colors = ['', 'white', 'yellow', 'red', 'navy'];
+        $statuses = $ebook->statuses();
+        $colors = ['white', 'yellow', 'red', 'navy'];
         $counters = [];
         foreach ($statuses as $status => $title) {
             $counters[] = [
@@ -29,7 +29,8 @@ class HomeController extends BackendController
             ];
         }
 
-        $latest_ebooks = Ebook::queryDefault()->withEnumTitles()->latest()->take(5)->get();
+        $latest_ebooks = Ebook::queryDefault()->where('status', '>', Ebook::STATUS_UPLOADED)->withEnumTitles()
+            ->latest()->take(5)->get();
 
         return view('ilib::backend.index', compact('counters', 'latest_ebooks'));
     }
