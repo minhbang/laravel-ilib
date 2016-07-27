@@ -1,6 +1,6 @@
 @extends('backend.layouts.master')
 
-@section('skin', 'skin-4')
+@section('skin', 'ilib-skin')
 
 @section('module-name', Html::twoPart(trans('ilib::common.cpanel'), 'text-danger', false, '|'))
 @section('user-name', RoleManager::getUserMaxRole(['sys.sadmin', 'tv.pt', 'tv.nv']))

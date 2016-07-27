@@ -50,15 +50,4 @@ return [
     'statistics_user'          => 'Theo NV biên mục',
     'statistics_read'          => 'Đọc toàn văn',
     'statistics_read_list'     => 'Danh sách thống kê Bạn đọc đã đọc toàn văn tài liệu',
-
-    // Ebook Status
-    'status'                   => 'Trạng thái',
-    'status_uploaded'          => 'Bạn đọc chia sẻ',
-    'status_processing'        => 'Đang Biên mục',
-    'status_pending'           => 'Đang Chờ duyệt',
-    'status_published'         => 'Đã duyệt',
-    'status_action_uploaded'   => 'Bạn đọc',
-    'status_action_processing' => 'Biên mục',
-    'status_action_pending'    => 'Trình duyệt',
-    'status_action_published'  => 'Duyệt',
 ];

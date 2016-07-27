@@ -45,6 +45,7 @@ class ServiceProvider extends BaseServiceProvider
         // model bindings
         $router->model('reader', 'Minhbang\ILib\Reader');
         MenuManager::registerMenus(config('ilib.menu'));
+        
     }
 
     /**

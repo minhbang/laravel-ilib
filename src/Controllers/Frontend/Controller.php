@@ -19,7 +19,7 @@ abstract class Controller extends BaseController
     public function __construct()
     {
         parent::__construct();
-        View::share('ebook_category', CategoryManager::root(Ebook::class));
+        View::share('ebook_category', CategoryManager::of(Ebook::class));
     }
 
     /**

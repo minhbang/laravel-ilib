@@ -91,7 +91,7 @@ class SearchController extends Controller
         $ebooks = $this->optionAppliedPaginate($query);
         $total = $ebooks->total();
         $ebook_widget = new EbookWidget();
-        $categories = CategoryManager::root(Ebook::class)->selectize();
+        $categories = CategoryManager::of(Ebook::class)->selectize();
         $enums = (new Ebook())->loadEnums('id');
 
         $column_key = array_combine(

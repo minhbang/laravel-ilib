@@ -19,7 +19,7 @@ class EnumController extends BaseController
     /**
      * @var string
      */
-    protected $route_prefix = 'ilib.';
+    public $route_prefix = 'ilib.';
 
     /**
      * EnumController constructor.

@@ -17,7 +17,7 @@ class HomeController extends BackendController
     public function index()
     {
         $ebook = new Ebook();
-        $statuses = $ebook->statusManager()->statusTitles();
+        $statuses = $ebook->accessControl()->pluck('title');
         $colors = ['', 'white', 'yellow', 'red', 'navy'];
         $counters = [];
         foreach ($statuses as $status => $title) {

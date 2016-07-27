@@ -6,7 +6,7 @@ use Minhbang\ILib\Reader;
 use Minhbang\ILib\UploadRequest;
 use Minhbang\ILib\Widgets\EbookWidget;
 use Minhbang\Kit\Support\VnString;
-use Status;
+//use Status;
 use Minhbang\User\User;
 
 /**
@@ -27,7 +27,7 @@ class EbookController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->statusManager = Status::of(Ebook::class);
+        //$this->statusManager = Status::of(Ebook::class);
     }
 
     /**

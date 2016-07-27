@@ -46,7 +46,7 @@ class StatisticsController extends BackendController
             ['#' => trans("ilib::common.statistics")]
         );
         /** @var Category[] $categories */
-        $categories = CategoryManager::root(Ebook::class)->node()->getDescendants();
+        $categories = CategoryManager::of(Ebook::class)->root()->getDescendants();
         $data = [];
         foreach ($categories as $category) {
             $data[] = [
