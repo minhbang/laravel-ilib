@@ -22,7 +22,7 @@ return [
     'search_result'        => 'Kết quả Tìm kiếm',
     'search_empty'         => 'Không tìm thấy Tài liệu số theo yêu cầu...',
     'latest'               => 'Tài liệu số mới cập nhật',
-
+    'ebook_files'          => 'Danh sách file',
     // actions
     'action'               => 'Khai thác',
     'edit'                 => 'Biên mục',
@@ -33,6 +33,7 @@ return [
     'upload_ebooks'        => 'Chia sẻ Tài liệu số',
     'upload'               => 'Chia sẻ',
     'upload_file_title'    => 'Nhân viên thư viện sẽ Biên tập/Biên mục tài liệu này trước khi phục vụ bạn đọc',
+    'upload_file'     => 'File Tài liệu',
     'upload_file_hint'     => 'Chọn file Tài liệu định dạng PDF...',
     'back_ilib_home'       => 'Về trang chủ Thư viện số',
 

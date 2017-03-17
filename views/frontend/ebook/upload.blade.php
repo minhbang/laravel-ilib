@@ -19,7 +19,7 @@
                 @endif
             </div>
             <div class="form-group{{ $errors->has("filename") ? ' has-error':'' }}">
-                {!! Form::label("filename", trans('ebook::common.filename'), ['class' => "control-label"]) !!}
+                {!! Form::label("filename", trans('ilib::common.upload_file'), ['class' => "control-label"]) !!}
                 {!! Form::fileinput("filename", ['prompt'=>trans('ilib::common.upload_file_hint')]) !!}
                 @if($errors->has("filename"))
                     <p class="help-block">{{ $errors->first("filename") }}</p>

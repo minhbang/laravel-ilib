@@ -1,7 +1,11 @@
 <?php
 // Backend
 // ---------------------------------------------------------------------------------------------------------------------
-Route::group(['prefix' => 'ilib/backend', 'middleware' => 'role:tv.*', 'namespace' => 'Minhbang\ILib\Controllers\Backend'], function () {
+Route::group([
+    'prefix'     => 'ilib/backend',
+    'middleware' => 'role:tv.*',
+    'namespace'  => 'Minhbang\ILib\Controllers\Backend',
+], function () {
     // Dasboard
     Route::get('/', ['as' => 'ilib.backend.dashboard', 'uses' => 'HomeController@index']);
     // Statistics
@@ -18,7 +22,10 @@ Route::group(['prefix' => 'ilib/backend', 'middleware' => 'role:tv.*', 'namespac
         Route::get('{category}/create', ['as' => 'createChildOf', 'uses' => 'CategoryController@createChildOf']);
         Route::post('move', ['as' => 'move', 'uses' => 'CategoryController@move']);
         Route::post('{category}', ['as' => 'storeChildOf', 'uses' => 'CategoryController@storeChildOf']);
-        Route::post('{category}/quick_update', ['as' => 'quick_update', 'uses' => 'CategoryController@quickUpdate']);
+        Route::post('{category}/quick_update', [
+            'as'   => 'quick_update',
+            'uses' => 'CategoryController@quickUpdate',
+        ]);
     });
     Route::resource('category', 'CategoryController');
 
@@ -57,16 +64,15 @@ Route::group(['prefix' => 'ilib/backend', 'middleware' => 'role:tv.*', 'namespac
         Route::delete('{reader}/{ebook}', ['as' => 'destroy', 'uses' => 'ReaderEbookController@destroy']);
         Route::post('{reader}/{ebook}', ['as' => 'quick_update', 'uses' => 'ReaderEbookController@quickUpdate']);
     });
-
-    // Load du lieu tu ILib 4.0
-    /*Route::group(['prefix' => 'ilib40', 'as' => 'ilib.backend.ilib40.'], function () {
-        Route::get('/', ['as' => 'index', 'uses' => 'Ilib40Controller@index']);
-    });*/
 });
 
 // Frontend
 // ---------------------------------------------------------------------------------------------------------------------
-Route::group(['prefix' => 'ilib', 'as' => 'ilib.', 'namespace' => 'Minhbang\ILib\Controllers\Frontend'], function () {
+Route::group([
+    'prefix'    => 'ilib',
+    'as'        => 'ilib.',
+    'namespace' => 'Minhbang\ILib\Controllers\Frontend',
+], function () {
     // Home
     Route::get('/', ['as' => 'index', 'uses' => 'HomeController@index']);
     // Category
@@ -74,13 +80,29 @@ Route::group(['prefix' => 'ilib', 'as' => 'ilib.', 'namespace' => 'Minhbang\ILib
     // Ebook
     Route::group(['prefix' => 'ebook', 'as' => 'ebook.'], function () {
         // Xem chi tiết
-        Route::get('{ebook}', ['as' => 'detail', 'middleware' => 'reader:detail', 'uses' => 'EbookController@detail']);
+        Route::get('{ebook}', [
+            'as'         => 'detail',
+            'middleware' => 'reader:detail',
+            'uses'       => 'EbookController@detail',
+        ]);
         // Đọc toàn văn
-        Route::get('{ebook}/{slug}.pdf', ['as' => 'view', 'middleware' => 'reader:view', 'uses' => 'EbookController@view']);
+        Route::get('{ebook}/{file}/{slug}.pdf', [
+            'as'         => 'view',
+            'middleware' => 'reader:view',
+            'uses'       => 'EbookController@view',
+        ]);
         // Download
-        Route::get('{ebook}/file/{slug}.pdf', ['as' => 'download', 'middleware' => 'reader:download', 'uses' => 'EbookController@download']);
+        Route::get('{ebook}/{file}/file/{slug}.pdf', [
+            'as'         => 'download',
+            'middleware' => 'reader:download',
+            'uses'       => 'EbookController@download',
+        ]);
         // Upload
-        Route::get('upload', ['as' => 'upload', 'middleware' => 'reader:upload', 'uses' => 'EbookController@upload']);
+        Route::get('upload', [
+            'as'         => 'upload',
+            'middleware' => 'reader:upload',
+            'uses'       => 'EbookController@upload',
+        ]);
         Route::post('upload', ['middleware' => 'reader:upload', 'uses' => 'EbookController@store']);
     });
     // Search

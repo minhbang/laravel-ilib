@@ -112,6 +112,26 @@
             ],
             [
                 'url'    => '#',
+                'label'  => trans('cmc_ilib::common.cmc_ilib'),
+                'icon'   => 'fa-university',
+                'active' => ['ilib/backend/cmc*'],
+                'items'  => [
+                    [
+                        'url' => route('ilib.backend.cmc.index'),
+                        'label' => trans('cmc_ilib::common.dashboard'),
+                        'icon' => 'fa-tasks',
+                        'active' => 'ilib/backend/cmc'
+                    ],
+                    [
+                        'url' => route('ilib.backend.cmc.bib.index'),
+                        'label' => trans('ebook::common.ebooks'),
+                        'icon' => 'fa-book',
+                        'active' => 'ilib/backend/cmc/bib*'
+                    ],
+                ]
+            ],
+            [
+                'url'    => '#',
                 'label'  => trans('backend.config'),
                 'icon'   => 'fa-cogs',
                 'active' => ['ilib/backend/enum*'],

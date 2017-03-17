@@ -2,6 +2,7 @@
 namespace Minhbang\ILib\Controllers\Frontend;
 
 use Minhbang\Ebook\Ebook;
+use Minhbang\File\File;
 use Minhbang\ILib\Reader;
 use Minhbang\ILib\UploadRequest;
 use Minhbang\ILib\Widgets\EbookWidget;
@@ -26,15 +27,13 @@ class EbookController extends Controller
     public function detail(Ebook $ebook)
     {
         if ($ebook->isPublished()) {
-            $ebook = $ebook->loadInfo();
-            $cat_show = route('ilib.category.show', ['category' => $ebook->category->id]);
+            $ebook    = $ebook->loadInfo();
             $this->buildBreadcrumbs([
-                $cat_show => $ebook->category->title,
                 '#'       => $ebook->title,
             ]);
 
-            $related_ebooks = $ebook->related(9)->get();
-            $ebook_widget = new EbookWidget();
+            $related_ebooks = $ebook->related(9);
+            $ebook_widget   = new EbookWidget();
 
             return view('ilib::frontend.ebook.detail', compact('ebook', 'related_ebooks', 'ebook_widget'));
         } else {
@@ -50,21 +49,20 @@ class EbookController extends Controller
      * Đọc toàn văn
      *
      * @param \Minhbang\Ebook\Ebook $ebook
+     * @param \Minhbang\File\File $file
      * @param string $slug
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function view(Ebook $ebook, $slug)
+    public function view(Ebook $ebook, File $file, $slug)
     {
         if ($this->checkViewFull($ebook, $slug)) {
-            $ebook = $ebook->loadInfo();
-            $cat_show = route('ilib.category.show', ['category' => $ebook->category->id]);
+            $ebook    = $ebook->loadInfo();
             $this->buildBreadcrumbs([
-                $cat_show => $ebook->category->title,
                 '#'       => $ebook->title,
             ]);
 
-            return view('ilib::frontend.ebook.view', compact('ebook'));
+            return view('ilib::frontend.ebook.view', compact('ebook', 'file'));
         } else {
             return view('message', [
                 'module'  => trans('ilib::common.ilib'),
@@ -79,20 +77,16 @@ class EbookController extends Controller
      * Download ebook file
      *
      * @param \Minhbang\Ebook\Ebook $ebook
+     * @param \Minhbang\File\File $file
      * @param string $slug
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function download(Ebook $ebook, $slug)
+    public function download(Ebook $ebook, File $file, $slug)
     {
         if ($this->checkViewFull($ebook, $slug)) {
             $ebook->updateRead();
-            header("Content-type: {$ebook->filemime}");
-            header('Content-Disposition: inline');
-            header('Content-Transfer-Encoding: binary');
-            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-            header('Expires: 0');
-            readfile($ebook->filePath());
+            $file->response();
         } else {
             return view('message', [
                 'module'  => trans('ilib::common.ilib'),
@@ -122,9 +116,9 @@ class EbookController extends Controller
         $ebook = new Ebook();
         $ebook->fill($request->only(['title', 'summary']));
         $ebook->fileFill($request);
-        $ebook->user_id = user('id');
-        $ebook->status = Ebook::STATUS_UPLOADED;
-        $ebook->slug = VnString::to_slug($ebook->title);
+        $ebook->user_id        = user('id');
+        $ebook->status         = Ebook::STATUS_UPLOADED;
+        $ebook->slug           = VnString::to_slug($ebook->title);
         $ebook->enumNotRestore = true;
         $ebook->save();
 

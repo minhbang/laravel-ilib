@@ -21,18 +21,16 @@
                     <dd>{{$ebook->pyear}}</dd>
                     <dt>{{trans("ebook::common.pplace_id")}}</dt>
                     <dd>{{$ebook->pplace}}</dd>
-                    <dt>{{trans("ebook::common.category_id")}}</dt>
-                    <dd>{{$ebook->category->title}}</dd>
                     <dt>{{trans("ebook::common.language_id")}}</dt>
                     <dd>{{$ebook->language}}</dd>
                     <dt>{{trans("ebook::common.pages")}}</dt>
                     <dd>{{$ebook->pages}}</dd>
+                    <dt>{{trans("ebook::common.categories")}}</dt>
+                    <dd>{!! $ebook->present()->categories !!}</dd>
                 </dl>
-                <div class="buttons">
-                    <a href="{{route('ilib.ebook.view', ['ebook' => $ebook->id, 'slug' => $ebook->slug])}}" class="btn btn-success">{{trans('ilib::common.view')}}</a>
-                    <div class="meta">
-                        <small>{!! $ebook->present()->fileicon !!} {{$ebook->present()->filesize}}</small>
-                    </div>
+                <div class="files">
+                    <h4 class="files-title">{{trans('ilib::common.ebook_files')}}</h4>
+                    {!! $ebook->present()->files('ilib.ebook.view', ['ebook' => $ebook->id, 'slug' => $ebook->slug]) !!}
                 </div>
             </div>
             <div class="summary">
