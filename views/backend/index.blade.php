@@ -1,4 +1,7 @@
 @extends('ilib::layouts.backend')
+<?php
+/** @var \Minhbang\Ebook\Ebook[] $latest_ebooks */
+?>
 @section('content')
     <div class="row">
         @foreach($counters as $counter)
@@ -20,7 +23,7 @@
         @endforeach
     </div>
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-md-6">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>{{trans('ilib::common.latest')}}</h5>
@@ -35,6 +38,8 @@
                                 <div class="media-body ">
                                     <small class="pull-right">{{$ebook->created_at->diffForHumans()}}</small>
                                     {!! $ebook->present()->title_block_1 !!}
+                                    {!! $ebook->present()->security !!}
+                                    {!! $ebook->present()->status !!}
                                 </div>
                             </div>
                         @endforeach

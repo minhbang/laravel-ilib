@@ -1,20 +1,20 @@
 <?php
-namespace Minhbang\ILib;
+namespace Minhbang\ILib\Reader;
 
 use Minhbang\Kit\Extensions\Request as BaseRequest;
 
 /**
- * Class ReaderRequest
+ * Class Request
  *
- * @package Minhbang\ILib
+ * @package Minhbang\Ebook
  */
-class ReaderRequest extends BaseRequest
+class ReaderEbookRequest extends BaseRequest
 {
     public $trans_prefix = 'ilib::reader';
     public $rules = [
-        'code'        => 'required|max:20',
-        'user_id'     => 'required|integer|min:1',
-        'security_id' => 'required|integer|min:1',
+        'expires_at' => 'required',
+        'reader_id'   => 'required|integer|min:1',
+        'ebook_id'    => 'required|integer|min:1',
     ];
 
     /**

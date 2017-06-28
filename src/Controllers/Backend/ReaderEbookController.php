@@ -1,14 +1,15 @@
 <?php
+
 namespace Minhbang\ILib\Controllers\Backend;
 
 use Minhbang\Ebook\Ebook;
-use Minhbang\ILib\ReaderEbookRequest;
+use Minhbang\ILib\Reader\ReaderEbookRequest;
 use Minhbang\Kit\Extensions\BackendController as BaseController;
-use Minhbang\ILib\Reader;
-use Datatable;
+use Minhbang\ILib\Reader\Reader;
 use Request;
-use Html;
-use DB;
+use Datatables;
+use Minhbang\Kit\Extensions\DatatableBuilder as Builder;
+use Minhbang\ILib\Reader\ReaderEbookTransformer;
 
 /**
  * Class ReaderEbookController
@@ -16,8 +17,7 @@ use DB;
  *
  * @package Minhbang\ILib\Controllers\Backend
  */
-class ReaderEbookController extends BaseController
-{
+class ReaderEbookController extends BaseController {
     /**
      * @var string
      */
@@ -27,191 +27,142 @@ class ReaderEbookController extends BaseController
 
     /**
      *
+     * @param \Minhbang\Kit\Extensions\DatatableBuilder $builder
+     *
      * @return \Illuminate\View\View
      */
-    public function index()
-    {
-        $tableOptions = [
-            'id'        => 'reader-manage',
-            'class'     => 'table-readers',
-            'row_index' => true,
-        ];
-        $options = [
-            'aoColumnDefs' => [
-                ['sClass' => 'min-width text-right', 'aTargets' => [0, 1]],
-                ['sClass' => 'min-width', 'aTargets' => [2, -1, -2]],
-            ],
-        ];
-        $table = Datatable::table()
-            ->addColumn(
-                '',
-                trans('ilib::reader.code_th'),
-                trans('user::user.name'),
-                trans('ebook::common.ebook'),
-                trans('ilib::reader.expires_at'),
-                ''
-            )
-            ->setOptions($options)
-            ->setCustomValues($tableOptions);
+    public function index( Builder $builder ) {
+        Reader::removeExpired();
         $this->buildHeading(
-            [trans('common.manage'), trans('ilib::reader.allow_ebooks')],
+            [ trans( 'common.manage' ), trans( 'ilib::reader.allow_ebooks' ) ],
             'fa-file-pdf-o',
             [
-                route($this->route_prefix . 'backend.reader.index') => trans('ilib::reader.reader'),
-                '#'                                                 => trans('ilib::reader.allowed'),
+                route( $this->route_prefix . 'backend.reader.index' ) => trans( 'ilib::reader.reader' ),
+                '#'                                                   => trans( 'ilib::reader.allowed' ),
             ]
         );
 
-        $readers = Reader::forSelectize()->get()->all();
-        $ebooks = Ebook::forSelectize()->orderUpdated()->get()->all();
+        $builder->ajax( route( $this->route_prefix . 'backend.reader_ebook.data' ) );
+        $html = $builder->columns( [
+            [ 'data' => 'id', 'name' => 'ebook_reader.reader_id', 'title' => 'ID', 'class' => 'min-width text-right' ],
+            [ 'data' => 'code', 'name' => 'readers.code', 'title' => trans( 'ilib::reader.code_th' ), 'class' => 'min-width text-center' ],
+            [
+                'data'  => 'name',
+                'name'  => 'users.name',
+                'title' => trans( 'user::user.name' ),
+                'class' => 'min-width',
+            ],
+            [
+                'data'  => 'ebook',
+                'name'  => 'ebooks.title',
+                'title' => trans( 'ebook::common.ebook' ),
+            ],
+            [
+                'data'  => 'expires_at',
+                'name'  => 'ebook_reader.expires_at',
+                'title' => trans( 'ilib::reader.expires_at' ),
+                'class' => 'min-width',
+            ],
+        ] )->addAction( [
+            'data'  => 'actions',
+            'name'  => 'actions',
+            'title' => trans( 'common.actions' ),
+            'class' => 'min-width',
+        ] );
+        $isPTTV = user_is( 'thu_vien.phu_trach' );
+        $readers = $isPTTV ? Reader::forSelectize()->get()->all() : [];
+        $ebooks = $isPTTV ? Ebook::forSelectize()->orderUpdated()->get()->all() : [];
 
-        return view(
-            'ilib::backend.reader.ebook',
-            compact('tableOptions', 'options', 'table', 'readers', 'ebooks')
-        );
+        return view( 'ilib::backend.reader.ebook', compact( 'html', 'readers', 'ebooks', 'isPTTV' ) );
     }
 
     /**
      * Danh sách Reader theo định dạng của Datatables.
      *
-     * @return \Datatable JSON
+     * @return mixed
      */
-    public function data()
-    {
-        /** @var \Minhbang\ILib\Reader $query */
+    public function data() {
+        /** @var \Minhbang\ILib\Reader\Reader $query */
         $query = Reader::queryDefault()->allowedEbook()->withUser();
-        if (Request::has('search_form')) {
+        if ( Request::has( 'search_form' ) ) {
             $query = $query
-                ->searchWhereBetween('ebook_reader.expires_at', 'mb_date_vn2mysql');
+                ->searchWhereBetween( 'ebook_reader.expires_at', 'mb_date_vn2mysql' );
         }
 
-        return Datatable::query($query)
-            ->addColumn(
-                'index',
-                function (Reader $model) {
-                    return $model->user_id;
-                }
-            )
-            ->addColumn(
-                'code',
-                function (Reader $model) {
-                    return $model->code;
-                }
-            )
-            ->addColumn(
-                'name',
-                function (Reader $model) {
-                    return "{$model->user_name} <small class=\"text-navy\"><em> - {$model->user_username}</em></small>";
-                }
-            )
-            ->addColumn(
-                'ebook',
-                function (Reader $model) {
-                    return $model->ebook_title;
-                }
-            )
-            ->addColumn(
-                'expires',
-                function (Reader $model) {
-                    // chuyển ngày định dạng VN, bỏ phần giây :00 ở cuối
-                    $expires_at = substr(mb_date_mysql2vn($model->expires_at), 0, -3);
-
-                    return Html::linkQuickUpdate(
-                        $model->user_id,
-                        $expires_at,
-                        [
-                            'attr'      => 'expires_at',
-                            'title'     => trans('ilib::reader.expires_at'),
-                            'class'     => 'w-md no-focus',
-                            'placement' => 'left',
-                        ],
-                        ['class' => 'a-expires_at'],
-                        route(
-                            $this->route_prefix . 'backend.reader_ebook.quick_update',
-                            ['reader' => $model->user_id, 'ebook' => $model->ebook_id]
-                        )
-                    );
-                }
-            )
-            ->addColumn(
-                'actions',
-                function (Reader $model) {
-                    return Html::tableActions(
-                        $this->route_prefix . 'backend.reader_ebook',
-                        ['reader' => $model->user_id, 'ebook' => $model->ebook_id],
-                        trans(
-                            'ilib::reader.allowed_title',
-                            ['reader' => "{$model->user_name} ({$model->user_username})", 'ebook' => $model->ebook_title]
-                        ),
-                        trans('ilib::reader.allowed'),
-                        [
-                            'renderEdit' => false,
-                            'renderShow' => false,
-                        ]
-                    );
-                }
-            )
-            ->searchColumns('users.username', 'users.name')
-            ->make();
+        return Datatables::of( $query )->setTransformer( new ReaderEbookTransformer( $this->route_prefix . 'backend' ) )->make( true );
     }
 
     /**
-     * @param \Minhbang\ILib\ReaderEbookRequest $request
+     * @param \Minhbang\ILib\Reader\ReaderEbookRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(ReaderEbookRequest $request)
-    {
-        $inputs = $request->all();
-        /** @var \Minhbang\ILib\Reader $reader */
-        $reader = Reader::findOrFail($inputs['reader_id']);
-        $reader->ebooks()->attach($inputs['ebook_id'], ['expires_at' => $this->buildExpiresAt($inputs['expires_at'])]);
+    public function store( ReaderEbookRequest $request ) {
+        $error = user_is( 'thu_vien.phu_trach' ) ? false : trans( "ilib::reader.add_allow_ebooks_unabled" );
+        if ( ! $error ) {
+            Reader::removeExpired();
+            $inputs = $request->all();
+            /** @var \Minhbang\ILib\Reader\Reader $reader */
+            $reader = Reader::findOrFail( $inputs['reader_id'] );
+            if ( Ebook::where( 'id', $inputs['ebook_id'] )->exists() ) {
+                if ( $reader->ebooks->contains( (int) $inputs['ebook_id'] ) ) {
+                    $error = trans( "ilib::reader.add_allow_ebooks_reader_exists" );
+                } else {
+                    $reader->ebooks()->attach( $inputs['ebook_id'], [ 'expires_at' => $this->buildExpiresAt( $inputs['expires_at'] ) ] );
+                }
+            } else {
+                $error = trans( "ilib::reader.add_allow_ebooks_not_found" );
+            }
+        }
 
         return response()->json(
             [
-                'type'    => 'success',
-                'content' => trans("ilib::reader.add_allow_ebooks_success"),
+                'type'    => $error ? 'error' : 'success',
+                'content' => $error ?: trans( "ilib::reader.add_allow_ebooks_success" ),
             ]
         );
     }
 
     /**
-     * @param \Minhbang\ILib\Reader $reader
+     * @param \Minhbang\ILib\Reader\Reader $reader
      * @param \Minhbang\Ebook\Ebook $ebook
      *
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */
-    public function destroy(Reader $reader, Ebook $ebook)
-    {
-        DB::table('ebook_reader')->where('ebook_id', $ebook->id)->where('reader_id', $reader->user_id)->delete();
+    public function destroy( Reader $reader, Ebook $ebook ) {
+        if ( user_is( 'thu_vien.phu_trach' ) ) {
+            $reader->ebooks()->detach( $ebook );
 
-        return response()->json(
-            [
-                'type'    => 'success',
-                'content' => trans('common.delete_object_success', ['name' => trans('ilib::reader.allowed')]),
-            ]
-        );
+            return response()->json(
+                [
+                    'type'    => 'success',
+                    'content' => trans( 'common.delete_object_success', [ 'name' => trans( 'ilib::reader.allowed' ) ] ),
+                ]
+            );
+        } else {
+            return response()->json(
+                [
+                    'type'    => 'error',
+                    'content' => trans( 'ilib::reader.add_allow_ebooks_unable_delete' ),
+                ]
+            );
+        }
     }
 
     /**
-     * @param \Minhbang\ILib\Reader $reader
+     * @param \Minhbang\ILib\Reader\Reader $reader
      * @param \Minhbang\Ebook\Ebook $ebook
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function quickUpdate(Reader $reader, Ebook $ebook)
-    {
-        $attr = Request::get('_attr');
-        if (in_array($attr, ['expires_at'])) {
-            $value = Request::get('_value');
-            switch ($attr) {
+    public function quickUpdate( Reader $reader, Ebook $ebook ) {
+        $attr = Request::get( '_attr' );
+        if ( user_is( 'thu_vien.phu_trach' ) && in_array( $attr, [ 'expires_at' ] ) ) {
+            $value = Request::get( '_value' );
+            switch ( $attr ) {
                 case 'expires_at':
-                    DB::table('ebook_reader')->where('reader_id', $reader->id)->where('ebook_id', $ebook->id)
-                        ->update([
-                            'expires_at' => $this->buildExpiresAt($value),
-                            'updated_at' => date("Y-m-d H:m:s"),
-                        ]);
+                    $reader->ebooks()->updateExistingPivot( $ebook->id, [ $attr => $this->buildExpiresAt( $value ) ] );
                     break;
                 default:
                     break;
@@ -220,11 +171,11 @@ class ReaderEbookController extends BaseController
             return response()->json(
                 [
                     'type'    => 'success',
-                    'message' => trans('common.quick_update_success', ['attribute' => trans("ilib::reader.{$attr}")]),
+                    'message' => trans( 'common.quick_update_success', [ 'attribute' => trans( "ilib::reader.{$attr}" ) ] ),
                 ]
             );
         } else {
-            return response()->json(['type' => 'error', 'message' => 'Invalid quick update request!']);
+            return response()->json( [ 'type' => 'error', 'message' => 'Invalid quick update request!' ] );
         }
     }
 
@@ -233,9 +184,8 @@ class ReaderEbookController extends BaseController
      *
      * @return string
      */
-    protected function buildExpiresAt($datetime_vn)
-    {
+    protected function buildExpiresAt( $datetime_vn ) {
         // chuyển ngày giờ định dạng MySQL, thêm phần giây :00 ở cuối
-        return mb_date_vn2mysql($datetime_vn) . ':00';
+        return mb_date_vn2mysql( $datetime_vn, true, ' ' ) . ':00';
     }
 }

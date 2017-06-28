@@ -2,8 +2,10 @@
 
 @section('skin', 'ilib-skin')
 
-@section('module-name', Html::twoPart(trans('ilib::common.cpanel'), 'text-danger', false, '|'))
-@section('user-name', RoleManager::getUserMaxRole(['sys.sadmin', 'tv.pt', 'tv.nv']))
+@section('module-name')
+    {!! Html::twoPart(trans('ilib::common.cpanel'), 'text-danger', false, '|') !!}
+@endsection
+@section('user-name', Authority::user()->firstRole(['sys.sadmin','sys.admin', 'thu_vien.phu_trach', 'thu_vien.nhan_vien'], 'title'))
 
 @section('sidebar')
     {!! MenuManager::render(

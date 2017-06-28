@@ -23,7 +23,7 @@
         </tr>
         <tr>
             <td>{{ trans('ilib::reader.security_id') }}</td>
-            <td><code>{{$reader->present()->security}}</code></td>
+            <td>{!! $reader->present()->security !!}</td>
         </tr>
     </table>
 @stop

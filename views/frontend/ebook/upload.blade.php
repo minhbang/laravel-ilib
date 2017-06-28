@@ -18,11 +18,11 @@
                     <p class="help-block">{{ $errors->first("title") }}</p>
                 @endif
             </div>
-            <div class="form-group{{ $errors->has("filename") ? ' has-error':'' }}">
-                {!! Form::label("filename", trans('ebook::common.filename'), ['class' => "control-label"]) !!}
-                {!! Form::fileinput("filename", ['prompt'=>trans('ilib::common.upload_file_hint')]) !!}
-                @if($errors->has("filename"))
-                    <p class="help-block">{{ $errors->first("filename") }}</p>
+            <div class="form-group{{ $errors->has("name") ? ' has-error':'' }}">
+                {!! Form::label("name", trans('file::common.name'), ['class' => "control-label"]) !!}
+                {!! Form::fileinput("name", ['prompt'=>trans('ilib::common.upload_file_hint')]) !!}
+                @if($errors->has("name"))
+                    <p class="help-block">{{ $errors->first("name") }}</p>
                 @endif
             </div>
 
@@ -49,10 +49,10 @@
     {!! Form::close() !!}
 @stop
 
-@section('script')
+@push('scripts')
     <script type="text/javascript">
         $(document).ready(function () {
             $('.wysiwyg').mbEditor({});
         });
     </script>
-@stop
+@endpush

@@ -5,17 +5,18 @@
             <h5>{!! trans('ilib::common.statistics_read_list') !!}</h5>
         </div>
         <div class="ibox-content">
-            {!! $table->render('_datatable') !!}
+            {!! $html->table(['id' => 'read-manage']) !!}
         </div>
     </div>
 @stop
 
-@section('script')
-    @include(
-        '_datatable_script',
-        [
-            'name' => trans('ebook::common.ebook'),
-            'data_url' => route('ilib.backend.statistics.read_data')
-        ]
-    )
-@stop
+@push('scripts')
+<script type="text/javascript">
+    window.settings.mbDatatables = {
+        trans: {
+            name: '{{trans('ebook::common.ebook')}}'
+        }
+    }
+</script>
+{!! $html->scripts() !!}
+@endpush

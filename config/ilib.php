@@ -1,13 +1,13 @@
 <?php
 return [
-    /**
-     * Tự động add các route
-     */
-    'add_route' => true,
+    'middlewares' => [
+        'backend'  => [ 'web', 'role:thu_vien.*' ],
+        'frontend' => [ 'web' ],
+    ],
     /**
      * Default display options
      */
-    'options'   => [
+    'options'     => [
         'category' => [
             'sort'      => 'name.asc',
             'page_size' => 6,
@@ -21,7 +21,7 @@ return [
     ],
 
     // Cấu hình menu cho module ilib
-    'menu'      => [
+    'menu'        => [
         // Định nghĩa menu zones cho ilib
         'zones'      => [
             'ilib_backend' => [
@@ -37,17 +37,17 @@ return [
                             'url'        => 'route:ilib.index',
                             'label'      => 'trans:common.home',
                             'icon'       => 'home',
-                            'attributes' => ['target' => '_blank'],
+                            'attributes' => [ 'target' => '_blank' ],
                         ],
-                        'content'     => ['label' => 'trans:menu::common.items.content', 'icon' => 'fa-files-o'],
-                        'user'        => ['label' => 'trans:menu::common.items.user', 'icon' => 'fa-university'],
-                        'statistic'   => ['label' => 'trans:ilib::common.statistics', 'icon' => 'fa-bar-chart', 'active' => 'ilib/backend/statistics*'],
-                        'setting'     => ['label' => 'trans:menu::common.items.setting', 'icon' => 'fa-cogs'],
-                        'maintenance' => ['label' => 'trans:menu::common.items.maintenance', 'icon' => 'fa-wrench'],
+                        'content'     => [ 'label' => 'trans:menu::common.items.content', 'icon' => 'fa-files-o' ],
+                        'user'        => [ 'label' => 'trans:ilib::reader.manage', 'icon' => 'fa-users' ],
+                        'statistic'   => [ 'label' => 'trans:ilib::common.statistics', 'icon' => 'fa-bar-chart', 'active' => 'ilib/backend/statistics*' ],
+                        'setting'     => [ 'label' => 'trans:menu::common.items.setting', 'icon' => 'fa-cogs' ],
+                        'maintenance' => [ 'label' => 'trans:menu::common.items.maintenance', 'icon' => 'fa-wrench' ],
                     ],
                     'presenter' => 'metis',
                     'options'   => [
-                        'attributes' => ['id' => 'side-menu'],
+                        'attributes' => [ 'id' => 'side-menu' ],
                     ],
                 ],
             ],
@@ -74,15 +74,15 @@ return [
                 'priority' => 1,
                 'url'      => 'route:ilib.backend.reader.index',
                 'label'    => 'trans:ilib::reader.reader',
-                'icon'     => 'fa-user',
-                'active'   => ['backend/reader', 'backend/reader/*'],
+                'icon'     => 'fa-id-card-o',
+                'active'   => [ 'ilib/backend/reader', 'ilib/backend/reader/*' ],
             ],
             'ilib_backend.sidebar.user.reader_ebook' => [
                 'priority' => 2,
                 'url'      => 'route:ilib.backend.reader_ebook.index',
                 'label'    => 'trans:ilib::reader.allow_ebooks',
-                'icon'     => 'fa-legal',
-                'active'   => 'backend/reader_ebook*',
+                'icon'     => 'fa-clock-o',
+                'active'   => 'ilib/backend/reader_ebook*',
             ],
 
             'ilib_backend.sidebar.statistic.category'  => [

@@ -8,31 +8,29 @@
             <div class="cover">
                 <div class="ebook-cover ebook-cover-lg">
                     {!! $ebook->present()->featured_image('img-responsive', false, false, '') !!}
-                    <div class="security">{!! $ebook->present()->securityFormated('success') !!}</div>
+                    <div class="security">{!! $ebook->present()->security('success') !!}</div>
                 </div>
             </div>
             <div class="details">
                 <dl class="dl-horizontal">
                     <dt>{{trans("ebook::common.writer_id")}}</dt>
-                    <dd>{{$ebook->writer}}</dd>
+                    <dd>{{$ebook->writer_title}}</dd>
                     <dt>{{trans("ebook::common.publisher_id")}}</dt>
-                    <dd>{{$ebook->publisher}}</dd>
+                    <dd>{{$ebook->publisher_title}}</dd>
                     <dt>{{trans("ebook::common.pyear")}}</dt>
                     <dd>{{$ebook->pyear}}</dd>
                     <dt>{{trans("ebook::common.pplace_id")}}</dt>
-                    <dd>{{$ebook->pplace}}</dd>
+                    <dd>{{$ebook->pplace_title}}</dd>
                     <dt>{{trans("ebook::common.category_id")}}</dt>
                     <dd>{{$ebook->category->title}}</dd>
                     <dt>{{trans("ebook::common.language_id")}}</dt>
-                    <dd>{{$ebook->language}}</dd>
+                    <dd>{{$ebook->language_title}}</dd>
                     <dt>{{trans("ebook::common.pages")}}</dt>
                     <dd>{{$ebook->pages}}</dd>
                 </dl>
-                <div class="buttons">
-                    <a href="{{route('ilib.ebook.view', ['ebook' => $ebook->id, 'slug' => $ebook->slug])}}" class="btn btn-success">{{trans('ilib::common.view')}}</a>
-                    <div class="meta">
-                        <small>{!! $ebook->present()->fileicon !!} {{$ebook->present()->filesize}}</small>
-                    </div>
+                <div class="files">
+                    <h5><i class="fa fa-book"></i> {{trans('ilib::common.view')}}</h5>
+                    {!! $ebook->present()->files('ilib.ebook.view', ['ebook' => $ebook->id, 'slug' => $ebook->slug]) !!}
                 </div>
             </div>
             <div class="summary">

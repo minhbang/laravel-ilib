@@ -69,7 +69,7 @@ class SearchController extends Controller
         $pyear_end = (int)mb_array_extract('pyear_end', $attributes);
         $pyear_end = $pyear_end >= $pyear_start ? $pyear_end : 0;
 
-        $query = Ebook::queryDefault()->published()->withEnumTitles()->withCategoryTitle()
+        $query = Ebook::queryDefault()->ready('read')->withEnumTitles()->withCategoryTitle()
             ->whereAttributes($attributes)->searchKeyword($q);
 
         if ($pyear_start || $pyear_end) {

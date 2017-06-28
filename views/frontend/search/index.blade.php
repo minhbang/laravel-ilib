@@ -81,7 +81,7 @@
     </div>
 @stop
 
-@section('script-module')
+@push('scripts')
     <script type="text/javascript">
         var collapse_icon = $('#btn-search-advanced').find('.fa'),
             collapse = $('#search-advanced');
@@ -99,4 +99,4 @@
         });
         updateCollapseIcon();
     </script>
-@stop
+@endpush

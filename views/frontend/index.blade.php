@@ -9,7 +9,7 @@
     </div>
 @stop
 
-@section('script-module')
+@push('scripts')
     <script type="text/javascript">
         $(document).ready(function () {
             $('.ebook-slider').bxSlider({
@@ -17,4 +17,4 @@
             });
         });
     </script>
-@stop
+@endpush

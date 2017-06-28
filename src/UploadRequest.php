@@ -1,4 +1,5 @@
 <?php
+
 namespace Minhbang\ILib;
 
 use Minhbang\Kit\Extensions\Request as BaseRequest;
@@ -8,13 +9,12 @@ use Minhbang\Kit\Extensions\Request as BaseRequest;
  *
  * @package Minhbang\ILib
  */
-class UploadRequest extends BaseRequest
-{
+class UploadRequest extends BaseRequest {
     public $trans_prefix = 'ebook::common';
     public $rules = [
-        'title'    => 'required|max:255',
-        'summary'  => 'required',
-        'filename' => 'mimes:pdf|max:40960', // 40 Mb = 40*1024 Kb
+        'title'   => 'required|max:255',
+        'summary' => 'required',
+        'name'    => 'required|mimes:pdf',
     ];
 
     /**
@@ -22,8 +22,7 @@ class UploadRequest extends BaseRequest
      *
      * @return bool
      */
-    public function authorize()
-    {
+    public function authorize() {
         return true;
     }
 
@@ -32,8 +31,9 @@ class UploadRequest extends BaseRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules() {
+        $this->rules['name'] .= '|max:' . config( 'ebook.max_file_size' );
+
         return $this->rules;
     }
 

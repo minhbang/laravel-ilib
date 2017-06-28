@@ -1,7 +1,7 @@
 <?php
 namespace Minhbang\ILib\Controllers\Frontend;
 
-use Minhbang\Category\Category as Category;
+use Minhbang\Category\Category;
 use Minhbang\Ebook\Ebook;
 use Minhbang\ILib\Widgets\EbookWidget;
 use Minhbang\Option\OptionableController;
@@ -44,7 +44,7 @@ class CategoryController extends Controller
         }
         $breadcrumbs['#'] = $category->title;
         $this->buildBreadcrumbs($breadcrumbs);
-        $ebooks = $this->optionAppliedPaginate(Ebook::queryDefault()->published()->withEnumTitles()->categorized($category));
+        $ebooks = $this->optionAppliedPaginate(Ebook::queryDefault()->ready('read')->withEnumTitles()->categorized($category));
         $ebook_widget = new EbookWidget();
 
         return view('ilib::frontend.category.show', compact('category', 'ebooks', 'ebook_widget'));

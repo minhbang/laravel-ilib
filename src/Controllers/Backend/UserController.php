@@ -1,9 +1,12 @@
 <?php
+
 namespace Minhbang\ILib\Controllers\Backend;
 
 use Minhbang\Kit\Extensions\BackendController as BaseController;
 
 /**
+ * Todo: chưa hiện thực
+ *
  * Class UserController
  * Quản lý nhân viên thư viện
  * - Chỉ phụ trách thư viện (hay admin) mới có quyền truy cập
@@ -12,8 +15,7 @@ use Minhbang\Kit\Extensions\BackendController as BaseController;
  *
  * @package Minhbang\ILib\Controllers\Backend
  */
-class UserController extends BaseController
-{
+class UserController extends BaseController {
     /**
      * @var string
      */

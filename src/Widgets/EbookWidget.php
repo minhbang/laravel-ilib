@@ -1,4 +1,5 @@
 <?php
+
 namespace Minhbang\ILib\Widgets;
 
 use Minhbang\Ebook\Ebook;
@@ -8,16 +9,14 @@ use Minhbang\Ebook\Ebook;
  *
  * @package Minhbang\ILib\Widgets
  */
-class EbookWidget
-{
+class EbookWidget {
     /**
      * @param \Minhbang\Ebook\Ebook $ebook
      *
      * @return string
      */
-    public function itemTh(Ebook $ebook)
-    {
-        $url = route('ilib.ebook.detail', ['ebook' => $ebook->id]);
+    public function itemTh( Ebook $ebook ) {
+        $url = route( 'ilib.ebook.detail', [ 'ebook' => $ebook->id ] );
 
         return <<<"ITEM"
 <div class="col-md-4 col-sm-4 col-xs-6">
@@ -26,12 +25,12 @@ class EbookWidget
             {$ebook->present()->featured_image}
             <div class="details">
                 <div class="inner">
-                    {$ebook->writer}<br>
+                    {$ebook->writer_title}<br>
                     {$ebook->present()->fileicon} {$ebook->present()->filesize}
                     <i class="fa fa-eye"></i> {$ebook->hit}
                 </div>
             </div>
-            <div class="security">{$ebook->present()->securityFormated('success')}</div>
+            <div class="security">{$ebook->present()->security( 'success' )}</div>
         </div>
         <div class="title">{$ebook->title}</div>
     </a>
@@ -44,14 +43,13 @@ ITEM;
      *
      * @return string
      */
-    public function itemList(Ebook $ebook)
-    {
+    public function itemList( Ebook $ebook ) {
         $ds = '';
-        $ds .= '<dt>' . trans("ebook::common.language_id") . '</dt><dd>' . $ebook->language . '</dd>';
-        $ds .= '<dt>' . trans("ebook::common.pages") . '</dt><dd>' . $ebook->pages . '</dd>';
+        $ds .= '<dt>' . trans( "ebook::common.language_id" ) . '</dt><dd>' . $ebook->language_title . '</dd>';
+        $ds .= '<dt>' . trans( "ebook::common.pages" ) . '</dt><dd>' . $ebook->pages . '</dd>';
 
         $url = $ebook->url;
-        $publisher = trans("ebook::common.publisher_id_th") . ': ' . $ebook->publisher;
+        $publisher = trans( "ebook::common.publisher_id_th" ) . ': ' . $ebook->publisher_title;
 
         return <<<"ITEM"
 <div class="col-md-12">
@@ -59,13 +57,13 @@ ITEM;
         <a href="$url">
             <div class="ebook-cover">
                 {$ebook->present()->featured_image}
-                <div class="security">{$ebook->present()->securityFormated('success')}</div>
+                <div class="security">{$ebook->present()->security( 'success' )}</div>
             </div>
         </a>
         <div class="inner">
             <blockquote>
                 <a href="$url"><div class="title">{$ebook->title}</div></a>
-                <footer>{$ebook->writer}, {$publisher}, {$ebook->pyear}</footer>
+                <footer>{$ebook->writer_title}, {$publisher}, {$ebook->pyear}</footer>
             </blockquote>
 
             <div class="details">
@@ -85,12 +83,11 @@ ITEM;
      *
      * @return string
      */
-    public function item(Ebook $ebook, $type = 'th')
-    {
-        $type = !in_array($type, ['th', 'list']) ? 'th' : $type;
-        $method = 'item' . ucfirst($type);
+    public function item( Ebook $ebook, $type = 'th' ) {
+        $type = ! in_array( $type, [ 'th', 'list' ] ) ? 'th' : $type;
+        $method = 'item' . ucfirst( $type );
 
-        return $this->{$method}($ebook);
+        return $this->{$method}( $ebook );
     }
 
     /**
@@ -100,11 +97,10 @@ ITEM;
      *
      * @return string
      */
-    public function items($ebooks, $type = 'th')
-    {
+    public function items( $ebooks, $type = 'th' ) {
         $html = '';
-        foreach ($ebooks as $ebook) {
-            $html .= $this->item($ebook, $type);
+        foreach ( $ebooks as $ebook ) {
+            $html .= $this->item( $ebook, $type );
         }
 
         return $html ? "<div class=\"row\">{$html}</div>" : $this->emptyItems();
@@ -113,9 +109,8 @@ ITEM;
     /**
      * @return string
      */
-    public function emptyItems()
-    {
-        return '<div class="alert alert-danger">' . trans('ilib::common.empty_items') . '</div>';
+    public function emptyItems() {
+        return '<div class="alert alert-danger">' . trans( 'ilib::common.empty_items' ) . '</div>';
     }
 
     /**
@@ -127,18 +122,17 @@ ITEM;
      *
      * @return string
      */
-    public function bxSlider($ebooks)
-    {
+    public function bxSlider( $ebooks ) {
         $html = '';
-        foreach ($ebooks as $ebook) {
+        foreach ( $ebooks as $ebook ) {
             $url = $ebook->url;
-            $publisher = trans('ebook::common.publisher_id_th').": {$ebook->publisher}, {$ebook->pyear}";
+            $publisher = trans( 'ebook::common.publisher_id_th' ) . ": {$ebook->publisher}, {$ebook->pyear}";
             $html .= <<<"ITEM"
 <div class="ebook-slider-item">
     <a href="$url">
         <div class="ebook-cover">
             {$ebook->present()->featured_image}
-            <div class="security">{$ebook->present()->securityFormated('success')}</div>
+            <div class="security">{$ebook->present()->security( 'success' )}</div>
         </div>
     </a>
     <div class="inner">

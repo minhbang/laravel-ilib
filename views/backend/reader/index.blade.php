@@ -1,34 +1,5 @@
 @extends($layout)
 @section('content')
-    <div id="reader-manage-tools" class="hidden">
-        <div class="dataTables_toolbar">
-            {!! Html::linkButton('#', trans('common.search'), ['class'=>'advanced_search_collapse','type'=>'info', 'size'=>'xs', 'icon' => 'search']) !!}
-            {!! Html::linkButton('#', trans('common.all'), ['class'=>'filter-clear', 'type'=>'warning', 'size'=>'xs', 'icon' => 'list']) !!}
-        </div>
-        <div class="bg-warning dataTables_advanced_search">
-            <form class="form-horizontal" role="form">
-                {!! Form::hidden('search_form', 1) !!}
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            {!! Form::label('search_created_at', trans('common.created_at'), ['class' => 'col-md-3 control-label']) !!}
-                            <div class="col-md-9">
-                                {!! Form::daterange('search_created_at', [], ['class' => 'form-control']) !!}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            {!! Form::label('search_updated_at', trans('common.updated_at'), ['class' => 'col-md-3 control-label']) !!}
-                            <div class="col-md-9">
-                                {!! Form::daterange('search_updated_at', [], ['class' => 'form-control']) !!}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
     <div class="row">
         <div class="col-lg-5 col-md-12">
             <div class="panel panel-green">
@@ -57,110 +28,139 @@
                     </form>
                 </div>
             </div>
+            @if(!$isPTTV)
+                <div class="alert alert-warning"><em>{!! trans('ilib::reader.add_user_notice') !!}</em></div>
+            @endif
         </div>
         <div class="col-lg-7 col-md-12">
             <div class="ibox ibox-table">
                 <div class="ibox-title">
                     <h5>{!! trans('ilib::reader.manage_title') !!}</h5>
-                    <div class="ibox-tools"><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></div>
+                    <div class="buttons">
+                        {!! Html::linkButton('#', trans('common.filter'), ['class'=>'advanced_filter_collapse','type'=>'info', 'size'=>'xs', 'icon' => 'filter']) !!}
+                        {!! Html::linkButton('#', trans('common.all'), ['class'=>'advanced_filter_clear', 'type'=>'warning', 'size'=>'xs', 'icon' => 'list']) !!}
+                    </div>
                 </div>
                 <div class="ibox-content">
-                    {!! $table->render('_datatable') !!}
+                    <div class="bg-warning dataTables_advanced_filter hidden">
+                        <form class="form-horizontal" role="form">
+                            {!! Form::hidden('filter_form', 1) !!}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {!! Form::label('filter_created_at', trans('common.created_at'), ['class' => 'col-md-3 control-label']) !!}
+                                        <div class="col-md-9">
+                                            {!! Form::daterange('filter_created_at', [], ['class' => 'form-control']) !!}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {!! Form::label('filter_updated_at', trans('common.updated_at'), ['class' => 'col-md-3 control-label']) !!}
+                                        <div class="col-md-9">
+                                            {!! Form::daterange('filter_updated_at', [], ['class' => 'form-control']) !!}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    {!! $html->table(['id' => 'reader-manage', 'class' => 'table table-striped table-bordered table-readers']) !!}
                 </div>
             </div>
         </div>
     </div>
 @stop
 
-@section('script')
-    @include(
-        '_datatable_script',
-        [
-            'name' => trans('ilib::reader.reader'),
-            'data_url' => route($route_prefix.'backend.reader.data'),
-            'drawCallback' => 'window.datatableDrawCallback'
-        ]
-    )
-    <script type="text/javascript">
-        function datatableDrawCallback(oTable) {
-            oTable.find('a.quick-update').quickUpdate({
-                url: '{{ route($route_prefix.'backend.reader.quick_update', ['reader' => '__ID__']) }}',
-                container: '#reader-manage',
-                elementTemplate: {
-                    '.a-security_id': '{!! Form::select('_value', $securities, null, ['prompt'=>trans('ilib::reader.security_id').'...', 'class' => 'form-control _value']) !!}'
-                },
-                dataTable: oTable,
-                afterShow: function (element, form) {
-                    if ($(element).hasClass('a-security_id')) {
-                        $('._value', form).selectize();
-                    }
+@push('scripts')
+<script type="text/javascript">
+    window.datatableDrawCallback = function (dataTableApi) {
+        dataTableApi.$('a.quick-update').quickUpdate({
+            'url': '{{ route($route_prefix. 'backend.reader.quick_update', ['reader' => '__ID__']) }}',
+            'container': '#reader-manage',
+            'elementTemplate': {
+                '.a-security_id': '{!! Form::select('_value', $securities, null, ['prompt'=>trans('ilib::reader.security_id').'...', 'class' => 'form-control _value']) !!}'
+            },
+            'dataTableApi': dataTableApi,
+            'afterShow': function (element, form) {
+                if ($(element).hasClass('a-security_id')) {
+                    $('._value', form).selectize();
                 }
-            });
-        }
-        var
-            reader_manage = $('#reader-manage'),
-            user_code = $('#user_code'),
-            user_id = $('#user_id'),
-            security_id = $('#security_id'),
-            add_user = $('#add-user'),
-            form = add_user.closest('form');
-
-        function updateAddUserBtn() {
-            if (user_code.val() && user_id.val() && security_id.val()) {
-                add_user.removeClass('disabled');
-            } else {
-                add_user.addClass('disabled');
             }
+        });
+    };
+    window.settings.mbDatatables = {
+        trans: {
+            name: '{{trans('ilib::reader.reader')}}'
         }
+    }
+</script>
+{!! $html->scripts() !!}
 
-        function clearForm() {
-            form.find("input[type=text]").val("");
-            $.each(form.find('select'), function (i, s) {
-                s.selectize.clear(true);
-            });
+<script type="text/javascript">
+    var
+        reader_manage = window.LaravelDataTables['reader-manage'],
+        user_code = $('#user_code'),
+        user_id = $('#user_id'),
+        security_id = $('#security_id'),
+        add_user = $('#add-user'),
+        form = add_user.closest('form');
+
+    function updateAddUserBtn() {
+        if (user_code.val() && user_id.val() && security_id.val()) {
+            add_user.removeClass('disabled');
+        } else {
+            add_user.addClass('disabled');
         }
+    }
 
-        user_code.change(function () {
+    function clearForm() {
+        form.find("input[type=text]").val("");
+        $.each(form.find('select'), function (i, s) {
+            s.selectize.clear(true);
+        });
+    }
+
+    user_code.change(function () {
+        updateAddUserBtn();
+    });
+    security_id.selectize({
+        onChange: function () {
             updateAddUserBtn();
-        });
-        security_id.selectize({
-            onChange: function () {
-                updateAddUserBtn();
+        }
+    });
+
+    user_id.selectize_user({
+        url: '{!! route('backend.user.select', ['query' => '__QUERY__']) !!}',
+        users: {!! json_encode($selectize_users) !!},
+        onChange: function () {
+            updateAddUserBtn();
+        }
+    });
+
+    add_user.click(function (e) {
+        e.preventDefault();
+        var
+            code = user_code.val(),
+            user = user_id.val(),
+            security = security_id.val();
+        if (add_user.hasClass('disabled') || user <= 0 || security <= 0 || code.length <= 0) {
+            return;
+        }
+        $.ajax({
+            type: 'post',
+            url: add_user.attr('href'),
+            data: {_token: window.Laravel.csrfToken, code: code, user_id: user, security_id: security},
+            dataType: 'json',
+            success: function (data) {
+                $.fn.mbHelpers.showMessage(data.type, data.content);
+                reader_manage.ajax.reload();
+                clearForm();
+            },
+            error: function () {
+                $.fn.mbHelpers.showMessage('error', '{{trans('ilib::reader.add_user_error')}}');
             }
         });
-
-        user_id.selectize_user({
-            url: '{!! route('backend.user.select', ['query' => '__QUERY__']) !!}',
-            users: {!! json_encode($selectize_users) !!},
-            onChange: function () {
-                updateAddUserBtn();
-            }
-        });
-
-        add_user.click(function (e) {
-            e.preventDefault();
-            var
-                code = user_code.val(),
-                user = user_id.val(),
-                security = security_id.val();
-            if (add_user.hasClass('disabled') || user <= 0 || security <= 0 || code.length <= 0) {
-                return;
-            }
-            $.ajax({
-                type: 'post',
-                url: add_user.attr('href'),
-                data: {_token: window.csrf_token, code: code, user_id: user, security_id: security},
-                dataType: 'json',
-                success: function (data) {
-                    $.fn.mbHelpers.showMessage(data.type, data.content);
-                    reader_manage.dataTable().fnReloadAjax();
-                    clearForm();
-                },
-                error: function () {
-                    $.fn.mbHelpers.showMessage('error', '{{trans('ilib::reader.add_user_error')}}');
-                }
-            });
-        });
-    </script>
-
-@stop
+    });
+</script>
+@endpush

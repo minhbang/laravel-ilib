@@ -17,7 +17,9 @@ class HomeController extends Controller
     public function index()
     {
         $ebook_widget = new EbookWidget();
-        $query = Ebook::queryDefault()->published()->withEnumTitles()->withCategoryTitle()->orderUpdated();
+        //$query = Ebook::queryDefault()->published()->withEnumTitles()->withCategoryTitle()->orderUpdated();
+        //$query = Ebook::queryDefault()->withEnumTitles()->withCategoryTitle()->orderUpdated();
+        $query = Ebook::queryDefault()->ready('read')->withEnumTitles()->withCategoryTitle()->orderUpdated();
         $query1 = clone $query;
         $ebook_latest = $query->take(6)->get();
         $ebook_featured = $query1->featured()->get();

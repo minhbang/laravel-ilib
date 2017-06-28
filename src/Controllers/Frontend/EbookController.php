@@ -1,63 +1,57 @@
 <?php
+
 namespace Minhbang\ILib\Controllers\Frontend;
 
 use Minhbang\Ebook\Ebook;
-use Minhbang\ILib\Reader;
+use Minhbang\File\File;
+use Minhbang\ILib\Reader\Reader;
 use Minhbang\ILib\UploadRequest;
 use Minhbang\ILib\Widgets\EbookWidget;
 use Minhbang\Kit\Support\VnString;
+
 //use Status;
-use Minhbang\User\User;
 
 /**
  * Class EbookController
  *
  * @package Minhbang\ILib\Controllers\Frontend
  */
-class EbookController extends Controller
-{
-    /**
-     * @var \Minhbang\Status\Traits\StatusManager;
-     */
-    protected $statusManager;
-
+class EbookController extends Controller {
     /**
      * EbookController constructor.
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         //$this->statusManager = Status::of(Ebook::class);
     }
 
     /**
      * Xem chi tiết
-     * - Chỉ Đã đăng nhập mới được xem
+     * - Chỉ Bạn đọc Đã đăng nhập mới được xem
      *
      * @param \Minhbang\Ebook\Ebook $ebook
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function detail(Ebook $ebook)
-    {
-        if ($ebook->isPublished()) {
+    public function detail( Ebook $ebook ) {
+        if ( $ebook->isReady( 'read' ) ) {
             $ebook = $ebook->loadInfo();
-            $cat_show = route('ilib.category.show', ['category' => $ebook->category->id]);
-            $this->buildBreadcrumbs([
+            $cat_show = route( 'ilib.category.show', [ 'category' => $ebook->category->id ] );
+            $this->buildBreadcrumbs( [
                 $cat_show => $ebook->category->title,
                 '#'       => $ebook->title,
-            ]);
+            ] );
 
-            $related_ebooks = $ebook->related(9)->get();
+            $related_ebooks = $ebook->related( 9 )->get();
             $ebook_widget = new EbookWidget();
 
-            return view('ilib::frontend.ebook.detail', compact('ebook', 'related_ebooks', 'ebook_widget'));
+            return view( 'ilib::frontend.ebook.detail', compact( 'ebook', 'related_ebooks', 'ebook_widget' ) );
         } else {
-            return view('message', [
-                'module'  => trans('ilib::common.ilib'),
+            return view( 'message', [
+                'module'  => trans( 'ilib::common.ilib' ),
                 'type'    => 'danger',
-                'content' => trans('ilib::common.messages.ebook_unpublished'),
-            ]);
+                'content' => trans( 'ilib::common.messages.ebook_unpublished' ),
+            ] );
         }
     }
 
@@ -65,27 +59,28 @@ class EbookController extends Controller
      * Đọc toàn văn
      *
      * @param \Minhbang\Ebook\Ebook $ebook
+     * @param \Minhbang\File\File $file
      * @param string $slug
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function view(Ebook $ebook, $slug)
-    {
-        if ($this->checkPermission($ebook, $slug)) {
+    public function view( Ebook $ebook, File $file, $slug ) {
+        if ( $this->checkPermission( $ebook, $slug ) ) {
             $ebook = $ebook->loadInfo();
-            $cat_show = route('ilib.category.show', ['category' => $ebook->category->id]);
-            $this->buildBreadcrumbs([
+            $cat_show = route( 'ilib.category.show', [ 'category' => $ebook->category->id ] );
+            $this->buildBreadcrumbs( [
                 $cat_show => $ebook->category->title,
                 '#'       => $ebook->title,
-            ]);
+            ] );
+            $multi_files = $ebook->files->count() > 1;
 
-            return view('ilib::frontend.ebook.view', compact('ebook'));
+            return view( 'ilib::frontend.ebook.view', compact( 'ebook', 'file', 'multi_files' ) );
         } else {
-            return view('message', [
-                'module'  => trans('ilib::common.ilib'),
+            return view( 'message', [
+                'module'  => trans( 'ilib::common.ilib' ),
                 'type'    => 'danger',
-                'content' => trans('ilib::common.messages.unauthorized_full'),
-            ]);
+                'content' => trans( 'ilib::common.messages.unauthorized_full' ),
+            ] );
         }
 
     }
@@ -94,36 +89,31 @@ class EbookController extends Controller
      * Download ebook file
      *
      * @param \Minhbang\Ebook\Ebook $ebook
+     * @param \Minhbang\File\File $file
      * @param string $slug
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function download(Ebook $ebook, $slug)
-    {
-        if ($this->checkPermission($ebook, $slug)) {
+    public function download( Ebook $ebook, File $file, $slug ) {
+        if ( $this->checkPermission( $ebook, $slug ) ) {
             $ebook->updateRead();
-            header("Content-type: {$ebook->filemime}");
-            header('Content-Disposition: inline');
-            header('Content-Transfer-Encoding: binary');
-            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-            header('Expires: 0');
-            readfile($ebook->filePath());
-            exit();
+            $file->response();
         } else {
-            return view('message', [
-                'module'  => trans('ilib::common.ilib'),
+            return view( 'message', [
+                'module'  => trans( 'ilib::common.ilib' ),
                 'type'    => 'danger',
-                'content' => trans('ilib::common.messages.unauthorized_full'),
-            ]);
+                'content' => trans( 'ilib::common.messages.unauthorized_full' ),
+            ] );
         }
     }
 
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function upload()
-    {
+    public function upload() {
         $ebook = new Ebook();
 
-        return view('ilib::frontend.ebook.upload', compact('ebook'));
+        return view( 'ilib::frontend.ebook.upload', compact( 'ebook' ) );
     }
 
     /**
@@ -131,29 +121,32 @@ class EbookController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function store(UploadRequest $request)
-    {
+    public function store( UploadRequest $request ) {
         $ebook = new Ebook();
-        $ebook->fill($request->only(['title', 'summary']));
-        $ebook->fileFill($request);
-        $ebook->user_id = user('id');
-        $ebook->status = $this->statusManager->valueStatus('uploaded');
-        $ebook->slug = VnString::to_slug($ebook->title);
-        $ebook->enumNotRestore = true;
+        $ebook->fill( $request->only( [ 'title', 'summary' ] ) );
+        $ebook->user_id = user( 'id' );
+        $ebook->status = $ebook->statusManager()->defaultStatus();
+        $ebook->slug = VnString::to_slug( $ebook->title );
         $ebook->save();
 
-        return view('message', [
-            'module'  => trans('ilib::common.ilib'),
-            'type'    => 'success',
-            'content' => trans('ilib::common.messages.upload_success'),
+        $file = new File();
+        $error = $file->fillRequest( $request );
+        if ( $error ) {
+            $ebook->delete();
+        } else {
+            $ebook->fillFiles( $file->id );
+        }
+        $msg_type = $error ? 'danger' : 'success';
+
+        return view( 'message', [
+            'module'  => trans( 'ilib::common.ilib' ),
+            'type'    => $msg_type,
+            'content' => trans( "ilib::common.messages.upload_{$msg_type}" ) . ( $error ? "<p class='error'>\"$error\"</p>" : '' ),
             'buttons' => [
-                [
-                    route('ilib.index'),
-                    trans('ilib::common.back_ilib_home'),
-                    ['icon' => 'home', 'size' => 'sm', 'type' => 'success'],
-                ],
+                [ route( 'ilib.index' ), trans( 'ilib::common.back_ilib_home' ), [ 'icon' => 'fa-home', 'type' => 'primary' ] ],
+                [ route( 'ilib.ebook.upload' ), trans( $error ? 'common.retry' : 'ilib::common.upload_more' ), [ 'icon' => 'fa-upload', 'type' => 'success' ] ],
             ],
-        ]);
+        ] );
     }
 
     /**
@@ -162,14 +155,10 @@ class EbookController extends Controller
      *
      * @return bool
      */
-    protected function checkPermission($ebook, $slug)
-    {
-        abort_unless($slug == $ebook->slug, 404);
-        /** @var User $user */
-        $user = user();
-        /** @var Reader $reader */
-        $reader = Reader::find($user->id);
+    protected function checkPermission( $ebook, $slug ) {
+        abort_unless( $slug == $ebook->slug, 404 );
+        $reader = Reader::current();
 
-        return $user->hasRole('tv.*') || ($ebook->isPublished() && $reader && $reader->canRead($ebook));
+        return authority()->user()->hasRole( 'thu_vien.*' ) || ( $ebook->isReady( 'read' ) && $reader && $reader->canRead( $ebook ) );
     }
 }

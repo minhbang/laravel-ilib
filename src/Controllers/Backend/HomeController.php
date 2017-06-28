@@ -1,6 +1,6 @@
-<?php
-namespace Minhbang\ILib\Controllers\Backend;
+<?php namespace Minhbang\ILib\Controllers\Backend;
 
+use Status;
 use Minhbang\Ebook\Ebook;
 use Minhbang\Kit\Extensions\BackendController;
 
@@ -9,28 +9,24 @@ use Minhbang\Kit\Extensions\BackendController;
  *
  * @package Minhbang\ILib\Controllers\Backend
  */
-class HomeController extends BackendController
-{
+class HomeController extends BackendController {
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
-    {
-        $ebook = new Ebook();
-        $statuses = $ebook->accessControl()->pluck('title');
-        $colors = ['', 'white', 'yellow', 'red', 'navy'];
+    public function index() {
+        $statuses = Status::of( Ebook::class )->all();
         $counters = [];
-        foreach ($statuses as $status => $title) {
+        foreach ( $statuses as $status => $info ) {
             $counters[] = [
                 'status' => $status,
-                'title'  => $title,
-                'color'  => $colors[$status],
-                'count'  => Ebook::status($status)->count(),
+                'title'  => $info['title'],
+                'color'  => $info['color'],
+                'count'  => Ebook::status( $status )->count(),
             ];
         }
 
-        $latest_ebooks = Ebook::queryDefault()->withEnumTitles()->latest()->take(5)->get();
+        $latest_ebooks = Ebook::queryDefault()->withEnumTitles()->latest()->take( 5 )->get();
 
-        return view('ilib::backend.index', compact('counters', 'latest_ebooks'));
+        return view( 'ilib::backend.index', compact( 'counters', 'latest_ebooks' ) );
     }
 }
