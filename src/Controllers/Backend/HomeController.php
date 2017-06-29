@@ -3,6 +3,7 @@
 use Status;
 use Minhbang\Ebook\Ebook;
 use Minhbang\Kit\Extensions\BackendController;
+use DB;
 
 /**
  * Class HomeController
@@ -25,8 +26,13 @@ class HomeController extends BackendController {
             ];
         }
 
-        $latest_ebooks = Ebook::queryDefault()->withEnumTitles()->latest()->take( 5 )->get();
+        $latest_ebooks = Ebook::queryDefault()->withEnumTitles()->latest('updated_at')->take( 5 )->get();
+        $user_ebooks = DB::table( 'ebooks' )->whereNotIn( 'status', [ 'uploaded' ] )
+                         ->leftJoin( 'users', 'users.id', '=', 'ebooks.user_id' )
+                         ->select( 'user_id', DB::raw( 'count(*) as ebook_count' ), 'users.name', 'users.username' )
+                         ->groupBy( 'user_id' )
+                         ->get()->all();
 
-        return view( 'ilib::backend.index', compact( 'counters', 'latest_ebooks' ) );
+        return view( 'ilib::backend.index', compact( 'counters', 'latest_ebooks', 'user_ebooks' ) );
     }
 }

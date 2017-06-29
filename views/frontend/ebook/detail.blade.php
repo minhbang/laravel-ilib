@@ -1,8 +1,9 @@
 @extends('ilib::layouts.frontend')
+<?php /** @var Minhbang\Ebook\Ebook $ebook */?>
 @section('content')
     <div class="ebook">
         <div class="main-heading">
-            {!! $ebook->present()->fileicon !!} {{$ebook->title}}
+            {{$ebook->title}}
         </div>
         <div class="content">
             <div class="cover">
@@ -27,6 +28,8 @@
                     <dd>{{$ebook->language_title}}</dd>
                     <dt>{{trans("ebook::common.pages")}}</dt>
                     <dd>{{$ebook->pages}}</dd>
+                    <dt>{{trans("common.updated_at")}}</dt>
+                    <dd>{{$ebook->present()->updatedAt}}</dd>
                 </dl>
                 <div class="files">
                     <h5><i class="fa fa-book"></i> {{trans('ilib::common.view')}}</h5>

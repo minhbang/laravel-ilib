@@ -126,7 +126,7 @@ ITEM;
         $html = '';
         foreach ( $ebooks as $ebook ) {
             $url = $ebook->url;
-            $publisher = trans( 'ebook::common.publisher_id_th' ) . ": {$ebook->publisher}, {$ebook->pyear}";
+            $publisher = trans( 'ebook::common.publisher_id_th' ) . ": {$ebook->publisher_title}, {$ebook->pyear}";
             $html .= <<<"ITEM"
 <div class="ebook-slider-item">
     <a href="$url">
@@ -138,9 +138,9 @@ ITEM;
     <div class="inner">
         <a href="$url"><div class="title">{$ebook->title}</div></a>
         <div class="details">
-            {$ebook->writer}<br>
+            {$ebook->writer_title}<br>
             $publisher<br>
-            <small>{$ebook->present()->fileicon} {$ebook->present()->filesize}</small><small><i class="fa fa-eye"></i> {$ebook->hit}</small>
+            <small><i class="fa fa-calendar"></i> {$ebook->present()->updatedAt}</small><small><i class="fa fa-eye"></i> {$ebook->hit}</small>
         </div>
     </div>
 </div>
