@@ -1,0 +1,82 @@
+@import (reference)"../../../laravel-kit/assets/less/_mixins";
+@import (reference)"../../../laravel-kit/assets/less/backend/variables";
+
+.table-ebooks {
+    .title {
+        font-weight: bold;
+        margin-bottom: 7px;
+    }
+}
+
+.dashboard-ebooks {
+    img {
+        border: 1px solid @border-color;
+        width: 48px;
+    }
+    .label + .label {
+        margin-left: 10px;
+    }
+    a {
+        color: @navy;
+        font-weight: bold;
+    }
+}
+
+// iLib Skin
+@ilib-skin-color: #0288d1;
+@ilib-skin-nav-bg: #01579b;
+@ilib-skin-a-color: #81d4fa;
+@ilib-skin-a-color-active: #ffffff;
+@ilib-skin-name: #ffffff;
+
+.ilib-skin {
+    background-color: @ilib-skin-nav-bg;
+    .nav-header {
+        background: url('../images/overlay1.png') no-repeat center -40px;
+        background-color: @ilib-skin-nav-bg !important;
+    }
+    .logo {
+        background: url('../images/logo-ilib.png') no-repeat center 15px!important;
+        .app-name {
+            color: @ilib-skin-name;
+        }
+    }
+    .logo-small {
+        background: url('../images/logo-ilib-sm.png') no-repeat center!important;
+    }
+    .navbar-default .nav > li > a {
+        color: @ilib-skin-a-color;
+        &:focus, &:hover {
+            background-color: darken(@ilib-skin-nav-bg, 5%);
+            color: @ilib-skin-a-color-active;
+        }
+    }
+    .navbar-default .nav > li.active {
+        border: none;
+        background-color: darken(@ilib-skin-nav-bg, 5%);
+        a {
+            &:focus, &:hover {
+                background-color: darken(@ilib-skin-nav-bg, 5%);
+                color: @ilib-skin-a-color-active;
+            }
+        }
+        > a {
+            color: @ilib-skin-a-color-active;
+        }
+    }
+    .navbar-default .nav .special_link a {
+        background-color: @ilib-skin-color;
+        color: @ilib-skin-a-color-active;
+        &:focus, &:hover {
+            background-color: darken(@ilib-skin-color, 3%) !important;
+        }
+    }
+    .navbar-default .nav-second-level {
+        background-color: darken(@ilib-skin-nav-bg, 5%) !important;
+        a {
+            &:focus, &:hover {
+                color: @ilib-skin-a-color-active !important;
+            }
+        }
+    }
+}

@@ -1,0 +1,311 @@
+@import (reference)"../../../../../resources/assets/less/frontend/_vars";
+@import (reference)"../../../laravel-kit/assets/less/_mixins";
+
+.ebook-cover {
+    height: 212px;
+    width: 140px;
+    position: relative;
+    margin: 0 auto;
+    &:before {
+        background: url('../images/ebook-cover.png') no-repeat transparent;
+        content: "";
+        height: 214px;
+        position: absolute;
+        width: 140px;
+    }
+    &:after {
+        content: "";
+        display: block;
+        height: 14px;
+        margin: -32px auto 5px;
+        width: 149px;
+        .box-shadow(0 24px 8px rgba(0, 0, 0, .27));
+        z-index: -1;
+    }
+    .security {
+        position: absolute;
+        right: 0;
+        top: 25px;
+        .label {
+            .border-radius(0);
+            font-weight: 300;
+            font-size: 12px;
+        }
+    }
+    &.ebook-cover-lg {
+        height: 424px;
+        width: 280px;
+        &:before {
+            background: url('../images/ebook-cover-lg.png') no-repeat transparent;
+            height: 424px;
+            width: 280px;
+        }
+        &:after {
+            height: 14px;
+            margin: -32px auto 5px;
+            width: 290px;
+            .box-shadow(0 24px 8px rgba(0, 0, 0, .27));
+        }
+        .security {
+            top: 40px;
+            .label {
+                font-size: 14px;
+            }
+        }
+    }
+}
+
+// Danh sách ebooks
+.ebooks {
+    padding: 20px 0;
+    .ebook-th-item {
+        .title {
+            text-align: center;
+            margin: 5px 0;
+            height: 70px;
+            overflow: hidden;
+        }
+        .details {
+            background: rgba(0, 0, 0, .50);
+            text-align: center;
+            position: absolute;
+            height: 202px;
+            width: 140px;
+            opacity: 0;
+            top: 10px;
+            color: @color4;
+            font-size: 12px;
+            .transition(opacity .25s ease);
+            .fa {
+                color: @color4 !important;
+            }
+            .inner {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                padding: 10px 0;
+            }
+        }
+        &:hover, &:focus {
+            .details {
+                opacity: 1;
+            }
+        }
+    }
+    .ebook-list-item {
+        .clearfix();
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+        border-bottom: 1px dotted @borderColor;
+        .ebook-cover {
+            margin: 0;
+            float: left;
+        }
+        .inner {
+            margin-left: 155px;
+            height: 212px;
+            position: relative;
+        }
+        .title {
+            margin-bottom: 10px;
+        }
+        .details {
+            position: absolute;
+            bottom: 0;
+        }
+        a {
+            &:hover, &:focus {
+                color: @color5;
+            }
+        }
+        .dl-horizontal {
+            font-size: 13px;
+            margin-bottom: 10px;
+            dt {
+                width: auto;
+            }
+        }
+        blockquote {
+            margin: 0;
+        }
+    }
+    .pagination {
+        > li {
+            > a, > span {
+            }
+        }
+
+    }
+}
+
+// Xem chi tiết ebook
+.ebook {
+    .main-heading {
+    }
+    .cover {
+        position: absolute;
+    }
+    .ebook-cover {
+        margin: 0 auto;
+    }
+    .content {
+        .clearfix();
+        margin-top: 20px;
+        position: relative;
+        .details {
+            margin-left: 290px;
+            height: 424px;
+            position: relative;
+            padding-top: 15px;
+        }
+        .files {
+            position: absolute;
+            bottom: 0;
+            line-height: 34px;
+            vertical-align: middle;
+            background-color: @gray-lighter;
+            padding: 5px 10px;
+            width: 100%;
+            border-top: 1px solid @borderColor;
+            border-bottom: 1px solid @borderColor;
+        }
+        .summary {
+            margin: 15px 0 30px;
+            text-align: justify;
+            .summary-title {
+                text-transform: uppercase;
+                font-weight: 700;
+                padding: 5px 0;
+                margin-bottom: 15px;
+                color: @color1;
+                &:before {
+                    content: " ";
+                    border-right: 10px solid @color1;
+                    border-bottom: 5px solid @color1;
+                    margin-right: 5px;
+                }
+                &:after {
+                    content: " ";
+                    border-bottom: 2px solid @borderColor;
+                    display: block;
+                }
+            }
+        }
+    }
+    &.viewer {
+        .main-heading {
+            padding: 10px;
+            font-size: 24px;
+            color: @color1;
+            background: #ffffff;
+            .full-screen {
+                float: right;
+            }
+        }
+        .content {
+            margin: 0;
+        }
+        iframe {
+            width: 100%;
+            height: 800px;
+            border: none;
+        }
+        &.full-screen {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            z-index: 9999;
+            .content {
+                height: ~"calc(100% - 45px)";
+            }
+            iframe {
+                height: 100%;
+            }
+        }
+    }
+}
+
+// page search ebook
+.ilib-search {
+    .main-heading {
+        border: none;
+    }
+    .form.search {
+        padding: 0;
+        border-bottom: 1px dotted @borderColor;
+        background: lighten(@gray-lighter, 3%);
+        input, .selectize-input {
+            color: @color5;
+        }
+        input.query {
+            color: @color7;
+            font-size: 1.3em;
+            font-weight: 700;
+        }
+        .collapse, .collapsing {
+            margin: 0;
+            padding: 15px;
+            background: darken(@gray-lighter, 5%);
+        }
+        .form-group {
+            margin-bottom: 5px;
+        }
+        #btn-search-advanced {
+            color: @color5;
+            &.collapsed {
+                color: inherit;
+            }
+        }
+    }
+}
+
+// Trang chủ ilib
+.ilib-home {
+    .bx-wrapper {
+        margin-bottom: 40px;
+        border: 0;
+        #gradient .vertical(@color4, @color8, 15%);
+        .bx-viewport {
+            background: url('../images/ebook-shelf3.png') no-repeat 0 212px transparent;
+        }
+        .bx-pager {
+            padding: 0;
+            bottom: -20px;
+            width: 468px;
+        }
+    }
+    .ebook-slider {
+        .ebook-slider-item {
+            padding: 40px 0;
+            position: relative;
+            .ebook-cover {
+                margin: 0 20px 0 165px;
+                float: left;
+            }
+            a {
+                color: @color7;
+                &:hover, &:focus {
+                    color: @color5;
+                }
+            }
+            .title {
+                font-size: 20px;
+                padding-right: 60px;
+            }
+            .details {
+                position: absolute;
+                bottom: 70px;
+                left: 324px;
+                color: @color4;
+                small {
+                    padding-right: 10px;
+                }
+            }
+        }
+    }
+}
