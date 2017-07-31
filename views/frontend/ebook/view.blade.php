@@ -14,7 +14,7 @@
             <a href="#" class="full-screen"><i class="fa fa-window-maximize"></i></a>
         </div>
         <div class="content">
-            <iframe src="/viewer/web/viewer.html?file={{route('ilib.ebook.download', ['file' => $file->id, 'ebook' => $ebook->id, 'slug' => $ebook->slug])}}"
+            <iframe src="/mbPDFjs/web/viewer.html?file={{route('ilib.ebook.download', ['file' => $file->id, 'ebook' => $ebook->id, 'slug' => $ebook->slug])}}"
                     frameborder="0"></iframe>
         </div>
     </div>

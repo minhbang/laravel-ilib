@@ -30,6 +30,7 @@ class HomeController extends BackendController {
         $user_ebooks = DB::table( 'ebooks' )->whereNotIn( 'status', [ 'uploaded' ] )
                          ->leftJoin( 'users', 'users.id', '=', 'ebooks.user_id' )
                          ->select( 'user_id', DB::raw( 'count(*) as ebook_count' ), 'users.name', 'users.username' )
+                         ->orderBy('ebook_count', 'desc')
                          ->groupBy( 'user_id' )
                          ->get()->all();
 
