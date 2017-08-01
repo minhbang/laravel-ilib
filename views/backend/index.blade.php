@@ -33,7 +33,7 @@
                         @foreach($latest_ebooks as $i => $ebook)
                             <div class="feed-element">
                                 <div class="pull-left">
-                                    {!! $ebook->present()->featured_image('', true, false, '_sm') !!}
+                                    {!! $ebook->present()->featured_image('', 'sm-', false, '_sm') !!}
                                 </div>
                                 <div class="media-body ">
                                     <small class="pull-right">{{$ebook->updated_at->diffForHumans()}}</small>
