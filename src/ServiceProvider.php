@@ -33,6 +33,8 @@ class ServiceProvider extends BaseServiceProvider {
         $router->model( 'reader', Reader::class );
         MenuManager::registerMenus( config( 'ilib.menu' ) );
         Enum::shared( Reader::class, Ebook::class, [ 'security_id' ] );
+        app('layout')->sidebarGroup(config('ilib.sidebarGroups'));
+        app('layout')->registerSidebars(config('ilib.sidebars'));
     }
 
     /**

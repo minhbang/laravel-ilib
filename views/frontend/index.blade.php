@@ -2,9 +2,15 @@
 @section('content')
     <div class="ilib-home">
         {!! $ebook_widget->bxSlider($ebook_featured) !!}
-        <div class="main-heading2">{{trans('ilib::common.latest')}}</div>
-        <div class="ebooks">
-            {!! $ebook_widget->items($ebook_latest, 'th') !!}
+        <div class="widget">
+            <div class="widget-title">
+                {{trans('ilib::common.latest')}}
+            </div>
+            <div class="widget-content">
+                <div class="ebooks">
+                    {!! $ebook_widget->items($ebook_latest, 'th') !!}
+                </div>
+            </div>
         </div>
     </div>
 @stop

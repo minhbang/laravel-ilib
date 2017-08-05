@@ -83,7 +83,7 @@ Route::group( [
     // Home
     Route::get( '/', [ 'as' => 'index', 'uses' => 'HomeController@index' ] );
     // Category
-    Route::get( 'category/{category}/{slug?}', [ 'as' => 'category.show', 'uses' => 'CategoryController@show' ] );
+    Route::get( 'category/{slug}', [ 'as' => 'category.show', 'uses' => 'CategoryController@show' ] );
     // Ebook
     Route::group( [ 'prefix' => 'ebook', 'as' => 'ebook.' ], function () {
         // Xem chi tiết

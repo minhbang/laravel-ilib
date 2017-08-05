@@ -1,21 +1,16 @@
 @extends('ilib::layouts.frontend')
 @section('content')
     <div class="ilib-search">
-        <div class="main-heading">
-            <i class="fa fa-search text-success"></i> {{trans('common.search_result')}}:
-            @if($total)
-                <small class="text-danger">{{$total}} {{trans('ebook::common.ebook')}}</small>
-            @endif
-        </div>
         <div class="form search">
             {!! Form::model($params, ['route' => 'ilib.search', 'method' => 'get']) !!}
             <div class="input-group">
-                {!! Form::text('q', $q, ['id' => 'form_search', 'class' => 'query input-lg form-control', 'placeholder' => trans('common.keyword').'...']) !!}
+                <span class="input-group-addon">{{trans('common.keyword')}}</span>
+                {!! Form::text('q', $q, ['id' => 'form_search', 'class' => 'query form-control', 'placeholder' => trans('common.keyword').'...']) !!}
                 <span class="input-group-btn">
-                    <button class="btn btn-success btn-lg" type="submit">
+                    <button class="btn btn-success" type="submit">
                         <i class="fa fa-search"></i> {{trans('common.search')}}
                     </button>
-                    <a id="btn-search-advanced" href="#search-advanced" class="btn btn-default btn-lg" role="button"
+                    <a id="btn-search-advanced" href="#search-advanced" class="btn btn-default" role="button"
                         data-toggle="collapse" aria-expanded="{{ $advanced ? 'true':'false' }}"
                         aria-controls="search-advanced">
                         {{trans('common.advanced')}} <i class="fa"></i>
@@ -66,7 +61,7 @@
             {!! Form::close() !!}
         </div>
         @if($total)
-            @include('_display_options', ['options' => $search_options, 'page_hint' => trans('ilib::common.page_hint')])
+            @include('kit::_display_options', ['options' => $search_options, 'page_hint' => trans('ilib::common.page_hint')])
         @endif
         <div class="ebooks">
             @if($total)

@@ -2,9 +2,6 @@
 <?php /** @var Minhbang\Ebook\Ebook $ebook */?>
 @section('content')
     <div class="ebook">
-        <div class="main-heading">
-            {{$ebook->title}}
-        </div>
         <div class="content">
             <div class="cover">
                 <div class="ebook-cover ebook-cover-lg">
@@ -43,9 +40,13 @@
         </div>
     </div>
     @if($related_ebooks->count())
-        <div class="main-heading2">{{trans('ebook::common.related')}}</div>
-        <div class="ebooks">
-            {!! $ebook_widget->items($related_ebooks, 'th') !!}
+        <div class="widget">
+            <div class="widget-title">{{trans('ebook::common.related')}}</div>
+            <div class="widget-content">
+                <div class="ebooks">
+                    {!! $ebook_widget->items($related_ebooks, 'th') !!}
+                </div>
+            </div>
         </div>
     @endif
 @stop

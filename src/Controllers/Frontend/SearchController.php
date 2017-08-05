@@ -1,4 +1,5 @@
 <?php
+
 namespace Minhbang\ILib\Controllers\Frontend;
 
 use Minhbang\Ebook\Ebook;
@@ -8,6 +9,7 @@ use Minhbang\Category\Category as Category;
 use Minhbang\Option\OptionableController;
 use Minhbang\ILib\DisplayOption;
 use CategoryManager;
+
 /**
  * Class SearchController
  *
@@ -23,7 +25,7 @@ class SearchController extends Controller
     protected function optionConfig()
     {
         return [
-            'zone'  => 'ilib',
+            'zone' => 'ilib',
             'group' => 'search',
             'class' => DisplayOption::class,
         ];
@@ -55,22 +57,17 @@ class SearchController extends Controller
      */
     public function index(Request $request)
     {
-        $this->buildBreadcrumbs([
-            '#' => trans('ilib::common.search'),
-        ]);
-
         $q = $request->get('q');
         $params = $request->only(array_keys($this->key_column));
         $attributes = $this->getAttributes($params);
-        $advanced = !empty($attributes);
+        $advanced = ! empty($attributes);
         $category_id = mb_array_extract('category_id', $attributes);
 
-        $pyear_start = (int)mb_array_extract('pyear_start', $attributes);
-        $pyear_end = (int)mb_array_extract('pyear_end', $attributes);
+        $pyear_start = (int) mb_array_extract('pyear_start', $attributes);
+        $pyear_end = (int) mb_array_extract('pyear_end', $attributes);
         $pyear_end = $pyear_end >= $pyear_start ? $pyear_end : 0;
 
-        $query = Ebook::queryDefault()->ready('read')->withEnumTitles()->withCategoryTitle()
-            ->whereAttributes($attributes)->searchKeyword($q);
+        $query = Ebook::queryDefault()->ready('read')->withEnumTitles()->withCategoryTitle()->whereAttributes($attributes)->searchKeyword($q);
 
         if ($pyear_start || $pyear_end) {
             if ($pyear_start) {
@@ -94,15 +91,14 @@ class SearchController extends Controller
         $categories = CategoryManager::of(Ebook::class)->selectize();
         $enums = (new Ebook())->loadEnums('id');
 
-        $column_key = array_combine(
-            array_values($this->key_column),
-            array_keys($this->key_column)
-        );
+        $column_key = array_combine(array_values($this->key_column), array_keys($this->key_column));
 
-        return view(
-            'ilib::frontend.search.index',
-            $enums + compact('q', 'ebooks', 'ebook_widget', 'total', 'categories', 'params', 'column_key', 'advanced')
-        );
+        $this->buildHeading([
+            trans('common.search_result'),
+            $total > 0 ? $total.' '.trans('ebook::common.ebook') : null,
+        ], 'fa-search', ['#' => trans('ilib::common.search')]);
+
+        return view('ilib::frontend.search.index', $enums + compact('q', 'ebooks', 'ebook_widget', 'total', 'categories', 'params', 'column_key', 'advanced'));
     }
 
     /**
