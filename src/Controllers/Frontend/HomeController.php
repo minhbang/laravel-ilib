@@ -1,7 +1,6 @@
 <?php
 namespace Minhbang\ILib\Controllers\Frontend;
 
-use Minhbang\ILib\Widgets\EbookWidget;
 use Minhbang\Ebook\Ebook;
 
 /**
@@ -16,12 +15,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $ebook_widget = new EbookWidget();
-        $query = Ebook::queryDefault()->ready('read')->withEnumTitles()->withCategoryTitle()->orderUpdated();
-        $query1 = clone $query;
-        $ebook_latest = $query->take(6)->get();
-        $ebook_featured = $query1->featured(10)->get();
-
-        return view('ilib::frontend.index', compact('ebook_widget', 'ebook_latest', 'ebook_featured'));
+        return view('ilib::frontend.index');
     }
 }

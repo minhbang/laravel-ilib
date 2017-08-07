@@ -44,8 +44,15 @@
             <div class="widget-title">{{trans('ebook::common.related')}}</div>
             <div class="widget-content">
                 <div class="ebooks">
-                    {!! $ebook_widget->items($related_ebooks, 'th') !!}
+                    <div class="row">
+                        @foreach($related_ebooks as $ebook)
+                            <div class="col-md-4 col-sm-4 col-xs-6">
+                                @include("ebook::frontend._ebook_summary_th", compact('ebook'))
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
+
             </div>
         </div>
     @endif

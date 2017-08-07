@@ -9,5 +9,9 @@ return [
             'title' => 'iLib: Sidebar',
             'description' => 'Hiển thị widget ở khu vực sidebar của iLib',
         ],
+        'ilib_main' => [
+            'title' => 'iLib: Main Sidebar',
+            'description' => 'Hiển thị widget ở khu vực trang chủ iLib',
+        ],
     ],
 ];

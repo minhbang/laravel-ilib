@@ -6,7 +6,6 @@ use Minhbang\Ebook\Ebook;
 use Minhbang\File\File;
 use Minhbang\ILib\Reader\Reader;
 use Minhbang\ILib\UploadRequest;
-use Minhbang\ILib\Widgets\EbookWidget;
 use Minhbang\Kit\Support\VnString;
 
 //use Status;
@@ -45,9 +44,8 @@ class EbookController extends Controller
                 '#' => $ebook->title,
             ]);
             $related_ebooks = $ebook->related(9)->get();
-            $ebook_widget = new EbookWidget();
 
-            return view('ilib::frontend.ebook.detail', compact('ebook', 'related_ebooks', 'ebook_widget'));
+            return view('ilib::frontend.ebook.detail', compact('ebook', 'related_ebooks'));
         } else {
             return view('message', [
                 'module' => trans('ilib::common.ilib'),

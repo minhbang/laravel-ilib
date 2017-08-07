@@ -31,7 +31,7 @@ return [
     // message
     'message'                => 'Thông báo',
     'messages'               => [
-        'login_to'          => 'Bạn đọc đăng nhập để <b>:action</b> Tài liệu số',
+        'login_to'          => 'Bạn đọc đăng nhập để <b>:action</b> Tài liệu số.<br>Nếu chưa có Tài khoản Bạn đọc, vui lòng đăng ký tại Thư viện!',
         'not_reader'        => '<b>Tài khoản Bạn đọc chưa kích hoạt!</b><br>Vui lòng liên hệ nhân viên Thư viện kích hoạt tài khoản để :action Tài liệu số.',
         'unauthorized_full' => 'Bạn đọc chưa được cấp quyền <b>Xem toàn văn</b> Tài liệu này!<br>Vui lòng liên hệ nhân viên Thư viện để được trợ giúp.',
         'unable_delete'     => 'Không thể xóa Tài liệu này!',

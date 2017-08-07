@@ -26,6 +26,11 @@ return [
         ],
     ],
     'sidebars' => [
+        'ilib_main' => [
+            'title' => 'trans::ilib::layout.sidebars.ilib_main.title',
+            'description' => 'trans::ilib::layout.sidebars.ilib_main.description',
+            'group' => 'ilib',
+        ],
         'ilib_sidebar' => [
             'title' => 'trans::ilib::layout.sidebars.ilib_sidebar.title',
             'description' => 'trans::ilib::layout.sidebars.ilib_sidebar.description',

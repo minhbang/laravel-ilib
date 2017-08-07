@@ -11,8 +11,8 @@
                         <i class="fa fa-search"></i> {{trans('common.search')}}
                     </button>
                     <a id="btn-search-advanced" href="#search-advanced" class="btn btn-default" role="button"
-                        data-toggle="collapse" aria-expanded="{{ $advanced ? 'true':'false' }}"
-                        aria-controls="search-advanced">
+                       data-toggle="collapse" aria-expanded="{{ $advanced ? 'true':'false' }}"
+                       aria-controls="search-advanced">
                         {{trans('common.advanced')}} <i class="fa"></i>
                     </a>
                 </span>
@@ -37,7 +37,8 @@
                             {!! Form::label('pyear', trans('ebook::common.pyear'), ['class' => 'control-label']) !!}
                             <div class="input-group">
                                 {!! Form::text($column_key['pyear_start'], null, ['class' => 'form-control', 'placeholder' => trans('common.from').'...']) !!}
-                                <span class="input-group-addon"><span class="glyphicon glyphicon-arrow-right"></span></span>
+                                <span class="input-group-addon"><span
+                                            class="glyphicon glyphicon-arrow-right"></span></span>
                                 {!! Form::text($column_key['pyear_end'], null, ['class' => 'form-control', 'placeholder' => trans('common.to').'...']) !!}
                             </div>
                         </div>
@@ -65,9 +66,19 @@
         @endif
         <div class="ebooks">
             @if($total)
-                {!! $ebook_widget->items($ebooks, $search_options->get('type')) !!}
+                <?php
+                $display_type = $search_options->get('type', 'th');
+                $cols = $display_type == 'list' ? 'col-md-12' : 'col-md-4 col-sm-4 col-xs-6';
+                ?>
+                <div class="row">
+                    @foreach($ebooks as $ebook)
+                        <div class="{{$cols}}">
+                            @include("ebook::frontend._ebook_summary_{$display_type}", compact('ebook'))
+                        </div>
+                    @endforeach
+                </div>
                 <div class="text-center">
-                    {!! $ebooks->appends($params)->links() !!}
+                    {!! $ebooks->appends($params + ['q' => $q, 'type' => $display_type])->links() !!}
                 </div>
             @else
                 <div class="alert alert-danger text-center">{{trans('ilib::common.search_empty')}}</div>
@@ -80,6 +91,7 @@
     <script type="text/javascript">
         var collapse_icon = $('#btn-search-advanced').find('.fa'),
             collapse = $('#search-advanced');
+
         function updateCollapseIcon() {
             if (collapse.hasClass('in')) {
                 collapse_icon.removeClass("fa-chevron-down").addClass("fa-chevron-up");
@@ -87,6 +99,7 @@
                 collapse_icon.removeClass("fa-chevron-up").addClass("fa-chevron-down");
             }
         }
+
         collapse.on('shown.bs.collapse', function () {
             updateCollapseIcon();
         }).on('hidden.bs.collapse', function () {

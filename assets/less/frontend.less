@@ -226,7 +226,7 @@
         padding: 0;
         border-bottom: 1px dotted @border-color;
         background: lighten(@gray-lighter, 3%);
-        .input-group-addon{
+        .input-group-addon {
             .border-radius(0);
         }
         input, .selectize-input {
@@ -254,7 +254,7 @@
 }
 
 // Trang chủ ilib
-.ilib-home {
+.widget-slider_ebooks{
     .bx-wrapper {
         margin-bottom: 40px;
         border: 0;
@@ -268,32 +268,33 @@
             width: 468px;
         }
     }
-    .ebook-slider {
-        .ebook-slider-item {
-            padding: 40px 0;
-            position: relative;
-            .ebook-cover {
-                margin: 0 20px 0 165px;
-                float: left;
+}
+
+.slider-ebooks {
+    .ebook-slide-item {
+        padding: 40px 0;
+        position: relative;
+        .ebook-cover {
+            margin: 0 20px 0 165px;
+            float: left;
+        }
+        a {
+            color: @color7;
+            &:hover, &:focus {
+                color: @color5;
             }
-            a {
-                color: @color7;
-                &:hover, &:focus {
-                    color: @color5;
-                }
-            }
-            .title {
-                font-size: 20px;
-                padding-right: 60px;
-            }
-            .details {
-                position: absolute;
-                bottom: 70px;
-                left: 324px;
-                color: @color4;
-                small {
-                    padding-right: 10px;
-                }
+        }
+        .title {
+            font-size: 20px;
+            padding-right: 60px;
+        }
+        .details {
+            position: absolute;
+            bottom: 70px;
+            left: 324px;
+            color: @color4;
+            small {
+                padding-right: 10px;
             }
         }
     }

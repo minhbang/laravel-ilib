@@ -3,7 +3,6 @@
 namespace Minhbang\ILib\Controllers\Frontend;
 
 use Minhbang\Ebook\Ebook;
-use Minhbang\ILib\Widgets\EbookWidget;
 use Illuminate\Http\Request;
 use Minhbang\Category\Category as Category;
 use Minhbang\Option\OptionableController;
@@ -87,18 +86,16 @@ class SearchController extends Controller
 
         $ebooks = $this->optionAppliedPaginate($query);
         $total = $ebooks->total();
-        $ebook_widget = new EbookWidget();
         $categories = CategoryManager::of(Ebook::class)->selectize();
         $enums = (new Ebook())->loadEnums('id');
 
         $column_key = array_combine(array_values($this->key_column), array_keys($this->key_column));
-
         $this->buildHeading([
             trans('common.search_result'),
             $total > 0 ? $total.' '.trans('ebook::common.ebook') : null,
         ], 'fa-search', ['#' => trans('ilib::common.search')]);
 
-        return view('ilib::frontend.search.index', $enums + compact('q', 'ebooks', 'ebook_widget', 'total', 'categories', 'params', 'column_key', 'advanced'));
+        return view('ilib::frontend.search.index', $enums + compact('q', 'ebooks', 'total', 'categories', 'params', 'column_key', 'advanced'));
     }
 
     /**
