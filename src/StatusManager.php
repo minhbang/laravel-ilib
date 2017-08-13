@@ -58,8 +58,9 @@ class StatusManager extends NewStatusManager {
                     'read|update|delete' => function ( $model, $user ) {
                         /** @var \Minhbang\User\Support\HasOwner $model */
                         return $model && $user && (
+                                $model->isOwnedBy( $user ) ||                 // Người upload
                                 Authority::user( $user )->isAdmin() ||        // Là Administrator
-                                Authority::user( $user )->is( 'thu_vien.*' )  // Hoặc Nhân viên / Phụ trách thư viện
+                                Authority::user( $user )->is( 'thu_vien.phu_trach' )  // Hoặc Nhân viên / Phụ trách thư viện
                             );
                     },
                 ],
@@ -84,6 +85,7 @@ class StatusManager extends NewStatusManager {
                     'update|delete' => function ( $model, $user ) {
                         /** @var \Minhbang\User\Support\HasOwner $model */
                         return $model && $user && (
+                                $model->isOwnedBy( $user ) ||                 // Người upload
                                 Authority::user( $user )->isAdmin() || // Là Administrator
                                 Authority::user( $user )->is( 'thu_vien.phu_trach' )  // Hoặc Phụ trách thư viện
                             );
