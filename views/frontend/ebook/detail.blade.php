@@ -12,7 +12,7 @@
             <div class="details">
                 <dl class="dl-horizontal">
                     <dt>{{trans("ebook::common.writer_id")}}</dt>
-                    <dd>{{$ebook->writer_title}}</dd>
+                    <dd>{{$ebook->present()->writer}}</dd>
                     <dt>{{trans("ebook::common.publisher_id")}}</dt>
                     <dd>{{$ebook->publisher_title}}</dd>
                     <dt>{{trans("ebook::common.pyear")}}</dt>
