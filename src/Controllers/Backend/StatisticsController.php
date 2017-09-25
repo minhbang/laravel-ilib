@@ -7,7 +7,7 @@ use Minhbang\Kit\Extensions\BackendController;
 use DB;
 use CategoryManager;
 use Minhbang\Ebook\Ebook;
-use Datatables;
+use DataTables;
 use Minhbang\Kit\Extensions\DatatableBuilder as Builder;
 use Minhbang\ILib\ReadEbookTransformer;
 
@@ -100,7 +100,7 @@ class StatisticsController extends BackendController {
                    ->leftJoin( 'ebooks', 'read_ebook.ebook_id', '=', 'ebooks.id' )
                    ->select( 'users.name', 'ebooks.title', 'read_ebook.read_at', 'read_ebook.ebook_id' );
 
-        return Datatables::of( $query )->setTransformer( new ReadEbookTransformer( $this->route_prefix . 'backend' ) )->make( true );
+        return DataTables::of( $query )->setTransformer( new ReadEbookTransformer( $this->route_prefix . 'backend' ) )->make( true );
     }
 
 }

@@ -7,7 +7,7 @@ use Minhbang\ILib\Reader\ReaderEbookRequest;
 use Minhbang\Kit\Extensions\BackendController as BaseController;
 use Minhbang\ILib\Reader\Reader;
 use Request;
-use Datatables;
+use DataTables;
 use Minhbang\Kit\Extensions\DatatableBuilder as Builder;
 use Minhbang\ILib\Reader\ReaderEbookTransformer;
 
@@ -89,7 +89,7 @@ class ReaderEbookController extends BaseController {
                 ->searchWhereBetween( 'ebook_reader.expires_at', 'mb_date_vn2mysql' );
         }
 
-        return Datatables::of( $query )->setTransformer( new ReaderEbookTransformer( $this->route_prefix . 'backend' ) )->make( true );
+        return DataTables::of( $query )->setTransformer( new ReaderEbookTransformer( $this->route_prefix . 'backend' ) )->make( true );
     }
 
     /**

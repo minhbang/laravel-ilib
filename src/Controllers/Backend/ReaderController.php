@@ -5,7 +5,7 @@ namespace Minhbang\ILib\Controllers\Backend;
 use Minhbang\ILib\Reader\ReaderRequest;
 use Minhbang\Kit\Extensions\BackendController as BaseController;
 use Minhbang\ILib\Reader\Reader;
-use Datatables;
+use DataTables;
 use Minhbang\Kit\Traits\Controller\QuickUpdateActions;
 use Request;
 use Minhbang\User\User;
@@ -76,7 +76,7 @@ class ReaderController extends BaseController {
                 ->searchWhereBetween( 'readers.updated_at', 'mb_date_vn2mysql' );
         }
 
-        return Datatables::of( $query )->setTransformer( new ReaderTransformer( $this->route_prefix . 'backend' ) )->make( true );
+        return DataTables::of( $query )->setTransformer( new ReaderTransformer( $this->route_prefix . 'backend' ) )->make( true );
     }
 
     /**
